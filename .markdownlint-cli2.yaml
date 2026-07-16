@@ -1,0 +1,13 @@
+config:
+  MD013:
+    line_length: 160
+    tables: false
+  MD024:
+    siblings_only: true
+globs:
+  - "**/*.md"
+ignores:
+  - "CHANGELOG.md"
+  # Verbatim agent content (prompt fragments + skills) copied byte-for-byte
+  # into $HERMES_HOME — never lint-shaped (MD041 etc. do not apply).
+  - "data/**"

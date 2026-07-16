@@ -1,0 +1,8 @@
+.direnv/
+result
+result-*
+*.swp
+*.swo
+.DS_Store
+__pycache__/
+.pytest_cache/
