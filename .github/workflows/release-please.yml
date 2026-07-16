@@ -11,3 +11,5 @@ permissions:
 jobs:
   release-please:
     uses: dryvist/.github/.github/workflows/_release-please.yml@main
+    secrets:
+      GH_ACTION_RELEASE_PLEASE_PRIVATE_KEY: ${{ secrets.GH_ACTION_RELEASE_PLEASE_PRIVATE_KEY }}
