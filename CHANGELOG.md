@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.3.0...nix-hermes-v0.4.0) (2026-07-16)
+
+
+### Features
+
+* **soul:** declare router model-fabric access incl. OpenRouter aliases ([#13](https://github.com/dryvist/nix-hermes/issues/13)) ([1dbcc57](https://github.com/dryvist/nix-hermes/commit/1dbcc57785eeb823fcf44635404426291a1cc05c))
+
 ## [0.3.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.2.0...nix-hermes-v0.3.0) (2026-07-16)
 
 
