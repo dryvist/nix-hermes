@@ -58,6 +58,12 @@ finding_key = <source>:<rule>:<entity>
   `host=pve1`, `vhost=llm`). Pick the narrowest entity that still groups repeat
   occurrences of the *same* problem.
 
+**Normalize** the assembled key so the same problem always renders identical
+bytes: lowercase everything, use `:` as the only field separator, and replace
+any whitespace with `-`. So a Splunk saved search `Ingest Stalled` on
+`index=Firewall` becomes `splunk:ingest-stalled:index=firewall` — never
+`splunk:Ingest Stalled:index=Firewall`. A drifting key defeats the dedup.
+
 Put it in the ticket title as a searchable `fk:` token, e.g.
 `fk:splunk:ingest-stalled:index=firewall`. Because the three parts are
 deterministic, the same problem always produces the same `finding_key`, so a
@@ -110,8 +116,7 @@ alert level). Map it straight to the ticket `priority_id`:
 | `critical` | `4` | 4 critical | P1 — server/service down, security |
 | `high` | `3` | 3 high | P2 — major degradation |
 | `medium` | `2` | 2 normal | P3 — minor / single-source |
-| `low` | `1` | 1 low | P4 — cosmetic / low |
-| `info` / `informational` | — | — | below threshold — record, do NOT open a ticket |
+| `low` / `info` / `informational` | `1` | 1 low | P4 — cosmetic / low |
 
 A non-Splunk source without a native severity uses the same P-level judgement
 to pick the `priority_id`. Always file into the **`Incidents`** group. Keep the
@@ -189,15 +194,21 @@ account id once per session, then look for an article written by anyone else:
 
 ```bash
 me=$(curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" "$ZAMMAD_URL/api/v1/users/me" | jq .id)
-# true = a human has touched the thread
+# true = a human authored an article on the thread
 curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
   "$ZAMMAD_URL/api/v1/ticket_articles/by_ticket/<id>" \
   | jq --argjson me "$me" 'any(.[]; .created_by_id != $me)'
+# true = a human made the last change to the ticket itself (state, priority, owner)
+curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
+  "$ZAMMAD_URL/api/v1/tickets/<id>" \
+  | jq --argjson me "$me" '.updated_by_id != $me'
 ```
 
-A ticket is **human-touched** if any article `created_by_id` is not you, or its
-`owner_id` is a real operator. When that happens, **yield**: remove the tag and
-stop auto-managing — the human owns it now.
+A ticket is **human-touched** if either check is `true` — any article
+`created_by_id` other than you, or the ticket's own `updated_by_id` is not you
+(a human changed its state, priority, or owner), or its `owner_id` is a real
+operator. When that happens, **yield**: remove the tag and stop auto-managing —
+never change its state or priority again. The human owns it now.
 
 ```bash
 curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
@@ -213,8 +224,8 @@ curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
 3. Recovery is **confirmed** with a bounded query (Section 4) — never on a merely
    quiet signal.
 4. The **quiet period** has fully elapsed: no new occurrence of this
-   `finding_key` for at least `ZAMMAD_QUIET_MINUTES` (default 60) — one quiet
-   reading is not enough; re-check after the window.
+   `finding_key` for at least `ZAMMAD_QUIET_HOURS` (the skill parameter,
+   default 72) — one quiet reading is not enough; re-check after the window.
 
 Only then close it with the Section 4 recovery article. Leave the `auto-managed`
 tag on the closed ticket so the record shows the agent resolved it. If any
