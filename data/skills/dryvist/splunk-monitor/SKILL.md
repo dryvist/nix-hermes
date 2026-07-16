@@ -22,6 +22,9 @@ environment over time and get better at it.
 
 Your Splunk access is the **Splunk MCP server** (registered as `splunk` in your
 config). Its tools: `run_splunk_query` (run SPL), `get_indexes`, `get_sourcetypes`.
+**Never pass an `app` parameter** — this Splunk has no separate app contexts you
+need (there is no `enterprise_security` app); an `app` value makes every query
+error. Run everything in the global namespace.
 
 Two things are true at once, and both matter:
 
