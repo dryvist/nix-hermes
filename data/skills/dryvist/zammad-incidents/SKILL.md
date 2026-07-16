@@ -1,7 +1,7 @@
 ---
 name: dryvist-zammad-incidents
-description: Open, update, dedupe, resolve, and document homelab incidents in Zammad (the ITSM system of record) via its REST API — the durable ticket + knowledge-base layer behind the splunk-monitor alerts
-version: 1.0.0
+description: Open, update, dedupe, resolve, and auto-close homelab incidents in Zammad (the ITSM system of record) via its REST API — the durable ticket + knowledge-base layer behind the splunk-monitor alerts, keyed on a stable finding_key and lifecycle-tagged so agent-managed tickets yield to any human touch
+version: 1.1.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -20,8 +20,9 @@ confirm something is genuinely wrong, the durable record lives here as a
 here as a **knowledge-base article**. Slack is only the notification surface —
 Zammad is the truth.
 
-You reach Zammad over its REST API with `curl`. Two environment variables are
-already in your process (from the systemd EnvironmentFile), so never print them:
+You reach Zammad over its REST API with `curl` (and `jq` to read fields). Two
+environment variables are already in your process (from the systemd
+EnvironmentFile), so never print them:
 
 - `ZAMMAD_URL` — base URL, e.g. `https://zammad.<subdomain>`
 - `ZAMMAD_API_TOKEN` — your API token
@@ -42,14 +43,30 @@ An incident that is already open must be **appended to**, never re-opened as a
 duplicate. Before creating anything, search for an open ticket that matches the
 same underlying problem.
 
-Give every incident a stable **fingerprint** — a short, deterministic tag for
-"this exact problem" (e.g. `fp:splunk-ingest-stalled:index=firewall`), and put
-it in the ticket title. Then a search finds prior occurrences:
+Give every incident a stable **`finding_key`** — a deterministic identifier for
+"this exact problem", built from three parts:
+
+```
+finding_key = <source>:<rule>:<entity>
+```
+
+- **source** — where the finding came from (e.g. `splunk`, `proxmox`, `unifi`).
+- **rule** — the specific detection/condition (e.g. `ingest-stalled`,
+  `disk-pressure`, `cert-expiring`). Same rule name every time — do not
+  paraphrase it per occurrence.
+- **entity** — the one thing it is about, as `key=value` (e.g. `index=firewall`,
+  `host=pve1`, `vhost=llm`). Pick the narrowest entity that still groups repeat
+  occurrences of the *same* problem.
+
+Put it in the ticket title as a searchable `fk:` token, e.g.
+`fk:splunk:ingest-stalled:index=firewall`. Because the three parts are
+deterministic, the same problem always produces the same `finding_key`, so a
+search reliably finds prior occurrences:
 
 ```bash
-# state.name:(new OR open) keeps it to LIVE incidents; the fingerprint pins the problem.
+# state.name:(new OR open) keeps it to LIVE incidents; the finding_key pins the problem.
 curl -sS -G -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  --data-urlencode 'query=state.name:(new OR open) AND title:"fp:splunk-ingest-stalled*"' \
+  --data-urlencode 'query=state.name:(new OR open) AND title:"fk:splunk:ingest-stalled:index=firewall"' \
   --data-urlencode 'limit=5' --data-urlencode 'expand=false' \
   "$ZAMMAD_URL/api/v1/tickets/search"
 ```
@@ -65,7 +82,7 @@ bodies or article lists into your context. If the search returns a match →
 ```bash
 curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
   -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tickets" -d '{
-    "title": "fp:<fingerprint> — <human summary>",
+    "title": "fk:<source>:<rule>:<entity> — <human summary>",
     "group": "Incidents",
     "priority_id": <P>,
     "article": {
@@ -77,18 +94,29 @@ curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
   }'
 ```
 
-**Severity mapping** — your P-level maps to Zammad `priority_id`:
+Then tag the new ticket `auto-managed` so the lifecycle in Section 5 can own it:
 
-| You call it | `priority_id` | Zammad name |
-| --- | --- | --- |
-| P1 (server/service down, security) | `4` | 4 critical |
-| P2 (major degradation) | `3` | 3 high |
-| P3 (minor / single-source) | `2` | 2 normal |
-| P4 (cosmetic / low) | `1` | 1 low |
+```bash
+curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
+  -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tags/add" \
+  -d '{"object": "Ticket", "o_id": <id>, "item": "auto-managed"}'
+```
 
-Always file into the **`Incidents`** group. Keep the article factual and
-numbers-backed — same discipline as a splunk-monitor alert, no walls of text,
-no raw events.
+**Severity mapping.** A Splunk finding carries a native `severity` (notable /
+alert level). Map it straight to the ticket `priority_id`:
+
+| Splunk `severity` | `priority_id` | Zammad name | Reads as |
+| --- | --- | --- | --- |
+| `critical` | `4` | 4 critical | P1 — server/service down, security |
+| `high` | `3` | 3 high | P2 — major degradation |
+| `medium` | `2` | 2 normal | P3 — minor / single-source |
+| `low` | `1` | 1 low | P4 — cosmetic / low |
+| `info` / `informational` | — | — | below threshold — record, do NOT open a ticket |
+
+A non-Splunk source without a native severity uses the same P-level judgement
+to pick the `priority_id`. Always file into the **`Incidents`** group. Keep the
+article factual and numbers-backed — same discipline as a splunk-monitor alert,
+no walls of text, no raw events.
 
 ---
 
@@ -151,18 +179,68 @@ just "it went quiet"):
 
 ---
 
-## 5. Guardrails
+## 5. Auto-managed lifecycle — quiet-period auto-close that yields to humans
 
-1. **Dedupe first, always.** Search open tickets by fingerprint before creating.
-   One incident = one ticket; everything else is an article on that ticket.
-2. **Bounded reads.** `limit` small, `expand=false`, never pull full ticket or
+Tickets you open are tagged `auto-managed` (Section 2). That tag is your license
+to close them without a human — and the moment a human engages, you give it up.
+
+**Yield to human touch — check this before ANY auto-close.** Learn your own
+account id once per session, then look for an article written by anyone else:
+
+```bash
+me=$(curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" "$ZAMMAD_URL/api/v1/users/me" | jq .id)
+# true = a human has touched the thread
+curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
+  "$ZAMMAD_URL/api/v1/ticket_articles/by_ticket/<id>" \
+  | jq --argjson me "$me" 'any(.[]; .created_by_id != $me)'
+```
+
+A ticket is **human-touched** if any article `created_by_id` is not you, or its
+`owner_id` is a real operator. When that happens, **yield**: remove the tag and
+stop auto-managing — the human owns it now.
+
+```bash
+curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
+  -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tags/remove" \
+  -d '{"object": "Ticket", "o_id": <id>, "item": "auto-managed"}'
+```
+
+**Auto-close conditions — ALL must hold:**
+
+1. The ticket is still tagged `auto-managed` (verify:
+   `GET /api/v1/tags?object=Ticket&o_id=<id>`).
+2. No human touch (the check above returns `false`).
+3. Recovery is **confirmed** with a bounded query (Section 4) — never on a merely
+   quiet signal.
+4. The **quiet period** has fully elapsed: no new occurrence of this
+   `finding_key` for at least `ZAMMAD_QUIET_MINUTES` (default 60) — one quiet
+   reading is not enough; re-check after the window.
+
+Only then close it with the Section 4 recovery article. Leave the `auto-managed`
+tag on the closed ticket so the record shows the agent resolved it. If any
+condition fails, do nothing this cycle and re-evaluate next cycle.
+
+---
+
+## 6. Guardrails
+
+1. **Dedupe first, always.** Search open tickets by `finding_key` before
+   creating. One incident = one ticket; everything else is an article on it.
+2. **Dry-run honours `ZAMMAD_DRY_RUN`.** When it is set, do NOT send any write
+   (create, update, close, tag) — print the method, path, and body you WOULD
+   send, then continue. Reads still run, so dedup and yield checks stay honest.
+3. **Rate-limit writes.** At most one create or state change per `finding_key`
+   per cycle. Never loop-create or loop-close; if unsure, do nothing and record.
+4. **Bounded reads.** `limit` small, `expand=false`, never pull full ticket or
    article lists into context — same anti-context-spam contract as splunk-monitor.
-3. **Numbers, not prose.** Every article carries the bounded query and the
+5. **Numbers, not prose.** Every article carries the bounded query and the
    figures that justify it.
-4. **Never print `$ZAMMAD_API_TOKEN`** (or any secret) into a ticket, article,
+6. **Never print `$ZAMMAD_API_TOKEN`** (or any secret) into a ticket, article,
    KB page, log, or Slack message.
-5. **Confirm recovery before closing.** A quiet signal is not a recovered one —
-   verify with a query.
-6. **Zammad is the record; Slack is the notification.** After you open or update
+7. **Confirm recovery before closing.** A quiet signal is not a recovered one —
+   verify with a query, and only auto-close under Section 5's full conditions.
+8. **Yield to humans.** An `auto-managed` ticket a human has touched is theirs —
+   drop the tag, never auto-close it.
+9. **Zammad is the record; Slack is the notification.** After you open or update
    a ticket, the splunk-monitor delivery step still DMs the operator — include
    the ticket URL (`$ZAMMAD_URL/#ticket/zoom/<id>`) so they can jump straight to it.
