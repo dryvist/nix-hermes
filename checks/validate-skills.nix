@@ -19,6 +19,10 @@ pkgs.runCommand "validate-skills" { } ''
   # SOUL sentinels: the shared base block and the Hermes surface variant.
   grep -q 'autonomous engineering agent' ${bundle}/SOUL.md || { echo "SOUL.md missing base"; fail=1; }
   grep -q '^## You are Hermes' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes variant"; fail=1; }
+  grep -q '^Tools:$' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes tools"; fail=1; }
+  grep -q '^Escalation routing:$' ${bundle}/SOUL.md || { echo "SOUL.md missing escalation routing"; fail=1; }
+  grep -q '^Model fabric:' ${bundle}/SOUL.md || { echo "SOUL.md missing model fabric"; fail=1; }
+  ! grep -q '^type: LLM Prompt' ${bundle}/SOUL.md || { echo "SOUL.md leaked OKF frontmatter"; fail=1; }
 
   [ "$fail" -eq 0 ] || exit 1
   touch $out
