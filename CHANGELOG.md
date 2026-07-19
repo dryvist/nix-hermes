@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.5.1...nix-hermes-v0.6.0) (2026-07-19)
+
+
+### Features
+
+* consume central Hermes prompts (commit-pinned ai-llm-prompts input) ([#25](https://github.com/dryvist/nix-hermes/issues/25)) ([c9f9a67](https://github.com/dryvist/nix-hermes/commit/c9f9a679fb897e872efdc338b90f132618dcc401))
+
 ## [0.5.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.5.0...nix-hermes-v0.5.1) (2026-07-19)
 
 
