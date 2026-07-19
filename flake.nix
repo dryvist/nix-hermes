@@ -14,13 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Source of truth for the shared autonomous base prompt. The bundle
-    # composes SOUL.md from its agentsmd/prompts/autonomous-base.md fenced
-    # base block plus the Hermes surface variant in data/soul/ — replacing
-    # the vendored (drift-prone) copy the Ansible role used to carry.
-    ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions";
-      flake = false;
+    # Immutable source of truth for the shared autonomous base and Hermes
+    # surface prompts. Skills remain owned by this repository.
+    ai-llm-prompts = {
+      url = "github:dryvist/ai-llm-prompts/7b427bbf9bc9c36374925fcfeedda0c3b1d8fe93";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -43,7 +41,7 @@
         let
           bundle = import ./lib/bundle.nix {
             inherit pkgs;
-            inherit (inputs) ai-assistant-instructions;
+            inherit (inputs) ai-llm-prompts;
           };
         in
         {

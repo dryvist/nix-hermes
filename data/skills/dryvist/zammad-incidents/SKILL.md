@@ -85,12 +85,24 @@ bodies or article lists into your context. If the search returns a match →
 
 ## 2. Create an incident
 
+File the ticket **as yourself**: Zammad requires a customer on agent-created
+tickets, and using your own token identity routes the ticket into your
+dedicated service org — auto-filed tickets stay in their own container,
+bulk-manageable without touching anything else. Look your login up once per
+session and reuse it:
+
+```bash
+ZAMMAD_SELF=$(curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
+  "$ZAMMAD_URL/api/v1/users/me" | jq -r .login)
+```
+
 ```bash
 curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
   -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tickets" -d '{
     "title": "fk:<source>:<rule>:<entity> — <human summary>",
     "group": "Incidents",
     "priority_id": <P>,
+    "customer": "'"$ZAMMAD_SELF"'",
     "article": {
       "subject": "<short>",
       "body": "<what you observed, the bounded query, the numbers>",

@@ -29,10 +29,9 @@ result/
 - `nix flake check` — build + validate every skill's frontmatter and the
   SOUL.md composition sentinels.
 
-`SOUL.md` is composed at build time from the shared autonomous base prompt
-(the `ai-assistant-instructions` flake input) plus the Hermes surface delta in
-`data/soul/hermes-variant.md`, so the base can never drift from its source of
-truth. Skills live under `data/skills/dryvist/`.
+`SOUL.md` is composed at build time from the shared autonomous base and Hermes
+surface in the immutable `ai-llm-prompts` flake input. The bundle strips OKF
+frontmatter before delivery. Skills remain owned under `data/skills/dryvist/`.
 
 ## Sharing workstation skills
 
