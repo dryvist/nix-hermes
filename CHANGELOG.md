@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.4.0...nix-hermes-v0.5.0) (2026-07-19)
+
+
+### Features
+
+* **skills:** openrouter-models — discovery, budgeted escalation, request lane ([#19](https://github.com/dryvist/nix-hermes/issues/19)) ([8de5c7f](https://github.com/dryvist/nix-hermes/commit/8de5c7f1c6feebf300722fe5ea70b26a9b4c87bb))
+
 ## [0.4.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.3.0...nix-hermes-v0.4.0) (2026-07-16)
 
 
