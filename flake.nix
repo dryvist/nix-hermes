@@ -17,7 +17,7 @@
     # Immutable source of truth for the shared autonomous base and Hermes
     # surface prompts. Skills remain owned by this repository.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/0431be6994d51169b9f705ddeba958eb8a4d0fc4";
+      url = "github:dryvist/ai-llm-prompts/7b427bbf9bc9c36374925fcfeedda0c3b1d8fe93";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
