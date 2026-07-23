@@ -130,6 +130,21 @@ not on this list — that is the point.
   raw.
 - **Capacity / license** — license volume versus quota, disk/queue pressure, slow creep
   over days.
+- **Hardware / disk failure** — predictive drive and pool failure in `index=hardware`.
+  A disk rarely dies silently; it warns first, and the warnings land here. Baseline is
+  zero for all of the below — any non-zero, non-baseline count earns a follow-up query
+  before you page. **SMART** degradation (pending/reallocated/offline-uncorrectable
+  sectors creeping up, `FAILING_NOW`, failed self-test):
+  `index=hardware sourcetype=smart:attributes earliest=-24h | stats
+  max(reallocated_sector_ct) as realloc, max(current_pending_sector) as pending,
+  values(status) as status by host, device`. **ZFS** vdev leaving `ONLINE` (redundancy
+  loss — page it): `index=hardware (sourcetype=zfs:pool OR zed) (FAULTED OR DEGRADED OR
+  UNAVAIL OR REMOVED) earliest=-1h | stats count, values(state) as state by host, pool,
+  vdev`. **Kernel disk** errors, which often precede the SMART flag:
+  `index=hardware ("I/O error" OR "medium error" OR "failed command") earliest=-1h |
+  stats count by host, device`. **IPMI SEL** — PSU/fan/thermal/backplane faults the OS
+  never sees: `index=hardware sourcetype=ipmi:sel (Critical OR "Non-recoverable" OR
+  "asserted") earliest=-1h | stats count by host, sensor`.
 
 ### 2.5 Record (this is how you get smarter)
 
