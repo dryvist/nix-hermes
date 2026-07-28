@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.6.0...nix-hermes-v0.7.0) (2026-07-28)
+
+
+### Features
+
+* **skills:** add hardware/disk-failure lens to splunk-monitor ([#29](https://github.com/dryvist/nix-hermes/issues/29)) ([f0bfb44](https://github.com/dryvist/nix-hermes/commit/f0bfb44fc09ae848441aade064eee4a4ef923c1e))
+
 ## [0.6.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.5.1...nix-hermes-v0.6.0) (2026-07-19)
 
 
