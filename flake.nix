@@ -2,6 +2,9 @@
   description = "Shared content bundle (skills + SOUL persona) for the Hermes autonomous agent";
 
   inputs = {
+    # Channel branch = intended pin (unstable). Renovate CANNOT bump this: it
+    # updates an input when its ref changes, and a channel branch's ref never
+    # changes. deps-refresh-nixpkgs.yml refreshes the lock on a schedule.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     flake-parts = {
