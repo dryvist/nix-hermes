@@ -1,0 +1,21 @@
+# Refresh the nixpkgs channel pin (scheduled)
+#
+# nixpkgs is pinned to a moving CHANNEL BRANCH (nixos-unstable, in flake.nix).
+# Renovate's nix manager bumps an input when its git ref changes — a channel
+# branch's ref never changes, so Renovate never advances this lock. This
+# workflow is the channel-pin refresher, delegated to the org-shared
+# implementation.
+name: Refresh nixpkgs channel
+
+on:
+  schedule:
+    - cron: "0 8 * * 2" # Tue 08:00 UTC
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  refresh:
+    uses: dryvist/.github/.github/workflows/_refresh-nixpkgs-channel.yml@main
+    secrets:
+      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
