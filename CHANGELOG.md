@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.7.0...nix-hermes-v0.8.0) (2026-07-30)
+
+
+### Features
+
+* **ci:** refresh nixpkgs channel pin on a schedule ([#33](https://github.com/dryvist/nix-hermes/issues/33)) ([bee0ced](https://github.com/dryvist/nix-hermes/commit/bee0cedfcb35aa0c14a82964c64ee034a5aa664d))
+
 ## [0.7.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.6.0...nix-hermes-v0.7.0) (2026-07-28)
 
 
