@@ -20,11 +20,25 @@
     # Immutable source of truth for the shared autonomous base and Hermes
     # surface prompts. Repo-local skills stay owned by this repository.
     #
-    # Unmerged branch revision — repin to merged main before this lands. The
-    # old pin is NOT a safe fallback here: it predates the delegation doctrine
-    # and still carries the self-tracked spend figure the persona cannot
-    # enforce, so merging against it would ship the exact divergence this
-    # change removes. See the repin note on ai-assistant-instructions below.
+    # UNMERGED branch revision — repin to merged main before this lands.
+    #
+    # MERGE ORDER (load-bearing in both directions, do not reorder):
+    #   1. ai-llm-prompts  PR #26  -> its main    (trunk-flow repo)
+    #   2. ai-assistant-instructions PR #793 -> its develop (git-flow repo)
+    #   3. repin BOTH inputs here to those merged revisions
+    #   4. this PR lands
+    # checks/validate-skills.nix asserts content that only exists at or after
+    # step 1, so landing this first fails the build rather than shipping
+    # quietly. That is the gate working, not a coupling to route around.
+    #
+    # Neither older pin is a safe fallback, for OPPOSITE reasons — do not
+    # "roll back" to either without reading both:
+    #   7b427bbf (pre-doctrine) carries the honest self-enforced spend figure
+    #     but none of the delegation doctrine.
+    #   f087d04  carries the doctrine but DELETED that figure, on the since-
+    #     disproven premise that the router enforced the cap. It does not, so
+    #     that revision leaves an unattended agent with no spend control at all
+    #     while telling it one is in force. The sentinel rejects it by design.
     ai-llm-prompts = {
       url = "github:dryvist/ai-llm-prompts/d7a4a20";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,10 +48,12 @@
     # here and on the workstation CLIs. Consumed only through
     # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
     #
-    # Unmerged branch revision — repin to merged develop before this lands.
-    # Both prompt/skill inputs above and here are unmerged: neither may keep a
-    # branch pin at merge time, and a build that succeeds proves nothing about
-    # which revision it built against.
+    # UNMERGED branch revision — repin to merged develop before this lands.
+    # Step 2 of the merge order stated at ai-llm-prompts above; both inputs are
+    # unmerged, so neither may keep a branch pin at merge time. A green build
+    # proves nothing about WHICH revision it built against — that is precisely
+    # how a stale pin shipped a persona missing its doctrine earlier in this
+    # branch, which is why validate-skills now asserts content, not just shape.
     ai-assistant-instructions = {
       url = "github:dryvist/ai-assistant-instructions/663e336";
       flake = false;
