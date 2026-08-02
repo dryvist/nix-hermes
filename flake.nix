@@ -39,7 +39,7 @@
     # branch pin at merge time, and a build that succeeds proves nothing about
     # which revision it built against.
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/ad83cf2";
+      url = "github:dryvist/ai-assistant-instructions/663e336";
       flake = false;
     };
   };
