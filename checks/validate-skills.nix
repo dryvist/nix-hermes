@@ -40,6 +40,19 @@ pkgs.runCommand "validate-skills" { } ''
   grep -q '^Model fabric:' ${bundle}/SOUL.md || { echo "SOUL.md missing model fabric"; fail=1; }
   ! grep -q '^type: LLM Prompt' ${bundle}/SOUL.md || { echo "SOUL.md leaked OKF frontmatter"; fail=1; }
 
+  # Delegation doctrine sentinels. These exist because a stale ai-llm-prompts
+  # pin fails silently: the build succeeds and ships a persona missing the
+  # doctrine while still carrying the prose spend figure it replaced. Nothing
+  # else in this check inspects SOUL.md content closely enough to notice.
+  grep -q 'Delegate bounded work to the shared router' ${bundle}/SOUL.md \
+    || { echo "SOUL.md missing delegation doctrine (stale ai-llm-prompts pin?)"; fail=1; }
+
+  # Spend caps are enforced by the router against this agent's key. A figure
+  # written into the persona is prose the agent cannot enforce and that drifts
+  # from router config the moment the cap moves.
+  ! grep -qE '\$[0-9]+(\.[0-9]+)?\s*(/|per )\s*day' ${bundle}/SOUL.md \
+    || { echo "SOUL.md states a spend figure; budgets are router-enforced"; fail=1; }
+
   [ "$fail" -eq 0 ] || exit 1
   touch $out
 ''

@@ -19,14 +19,25 @@
 
     # Immutable source of truth for the shared autonomous base and Hermes
     # surface prompts. Repo-local skills stay owned by this repository.
+    #
+    # Unmerged branch revision — repin to merged main before this lands. The
+    # old pin is NOT a safe fallback here: it predates the delegation doctrine
+    # and still carries the self-tracked spend figure the persona cannot
+    # enforce, so merging against it would ship the exact divergence this
+    # change removes. See the repin note on ai-assistant-instructions below.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/7b427bbf9bc9c36374925fcfeedda0c3b1d8fe93";
+      url = "github:dryvist/ai-llm-prompts/f087d0407615982bb44e5d1bc77c1b40434146d4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Owner of cross-harness skills — the ones whose behavior must be identical
     # here and on the workstation CLIs. Consumed only through
     # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
+    #
+    # Unmerged branch revision — repin to merged develop before this lands.
+    # Both prompt/skill inputs above and here are unmerged: neither may keep a
+    # branch pin at merge time, and a build that succeeds proves nothing about
+    # which revision it built against.
     ai-assistant-instructions = {
       url = "github:dryvist/ai-assistant-instructions/282b858";
       flake = false;
