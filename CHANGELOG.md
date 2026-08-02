@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.8.0...nix-hermes-v0.9.0) (2026-08-02)
+
+
+### Features
+
+* **skills:** add docs-starlight-authoring skill ([#38](https://github.com/dryvist/nix-hermes/issues/38)) ([e5e6ccc](https://github.com/dryvist/nix-hermes/commit/e5e6cccde156acc69777b531556b772f997e5ef9))
+
 ## [0.8.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.7.0...nix-hermes-v0.8.0) (2026-07-30)
 
 
