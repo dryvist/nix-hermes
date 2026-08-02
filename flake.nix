@@ -71,7 +71,7 @@
     # doctrine earlier in this branch, which is why validate-skills now asserts
     # content, not just shape.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/786e1f1";
+      url = "github:dryvist/claude-code-plugins/fe173de";
       flake = false;
     };
   };
