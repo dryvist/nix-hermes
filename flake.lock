@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "ai-assistant-instructions": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1785691365,
-        "narHash": "sha256-ttNMm2/U+Wt+xVlr72FnuW68BpKh3ecgBoPLtgh2zG0=",
-        "owner": "dryvist",
-        "repo": "ai-assistant-instructions",
-        "rev": "663e336db6f242000479ccd4a88b51cd4c958add",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dryvist",
-        "ref": "663e336",
-        "repo": "ai-assistant-instructions",
-        "type": "github"
-      }
-    },
     "ai-llm-prompts": {
       "inputs": {
         "nixpkgs": [
@@ -35,6 +18,23 @@
         "owner": "dryvist",
         "ref": "d7a4a20",
         "repo": "ai-llm-prompts",
+        "type": "github"
+      }
+    },
+    "claude-code-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785694256,
+        "narHash": "sha256-jwCngzzJF8vzgNY3gsgo3c3NKHGkYkzd8ifB6sC7vkM=",
+        "owner": "dryvist",
+        "repo": "claude-code-plugins",
+        "rev": "786e1f19a1c5aab4c8c20040f73d04be36968f2e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dryvist",
+        "ref": "786e1f1",
+        "repo": "claude-code-plugins",
         "type": "github"
       }
     },
@@ -159,8 +159,8 @@
     },
     "root": {
       "inputs": {
-        "ai-assistant-instructions": "ai-assistant-instructions",
         "ai-llm-prompts": "ai-llm-prompts",
+        "claude-code-plugins": "claude-code-plugins",
         "dryvist-github": "dryvist-github",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs"

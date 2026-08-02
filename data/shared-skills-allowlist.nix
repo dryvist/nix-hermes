@@ -19,10 +19,20 @@
 # shared skill therefore requires deleting the local copy in the same change,
 # which is the point: the only reason to adopt one is to stop maintaining two.
 #
-# No frontmatter translation step exists because none is needed: both entries
-# below already carry the name/description/version that checks/validate-skills
-# requires, plus a metadata.hermes block. A future entry lacking those must
-# gain them upstream rather than being patched in transit.
+# No frontmatter translation step exists, and none may be added: a skill is
+# delivered byte-for-byte or not at all, because a file patched in transit is a
+# second version of itself that no reader of the upstream copy can see. Both
+# entries below carry name, description, a version, and a metadata.hermes block;
+# an entry lacking those must gain them upstream.
+#
+# Their version sits under `metadata:`, not at the top level, and that is not a
+# stylistic difference. claude-code-plugins validates every SKILL.md against the
+# agentskills.io spec, whose top-level key set is closed — `version` and `author`
+# are rejected there, and `metadata` is the sanctioned place for both. Since the
+# marketplace holds the only authored copy, its spec wins, and
+# checks/validate-skills.nix accepts a version at either depth. Do not "fix" the
+# upstream file to match the older local convention; that reintroduces the fork
+# this allowlist exists to end.
 #
 # ---------------------------------------------------------------------------
 # Review record
@@ -35,9 +45,13 @@
 #   - Neither instructs the agent to acquire, read, or store a credential. Both
 #     state the opposite — the agent never holds a provider key, and a router
 #     failure is never answered by reaching for one.
-#   - Spend is bounded by the router against this agent's own key, not by prose
-#     and not by self-tracking that an unattended loop could quietly drift on.
-#     A budget rejection is documented as a correct answer, not an obstacle.
+#   - Spend is NOT bounded by the router — the proxy is storage-less and one
+#     credential serves every caller, so there is nothing to meter per caller.
+#     Both skills say so plainly and name the daily figure the agent must apply
+#     itself, which is the only control that exists. This is the weakest point
+#     of the pair and the reason the SOUL spend sentinel was inverted: an
+#     unattended loop is exactly where self-enforcement fails silently. Revisit
+#     it the moment router-side metering becomes real.
 #   - Egress is constrained: free-tier endpoints log prompt content, so both
 #     skills forbid sending secrets, infrastructure topology, or personal data
 #     through them. That rule matters more unattended than interactively.
@@ -49,13 +63,13 @@
 # ---------------------------------------------------------------------------
 [
   {
-    input = "ai-assistant-instructions";
-    skill = "agentsmd/skills/delegate-to-router";
+    input = "claude-code-plugins";
+    skill = "ai-delegation/skills/delegate-to-router";
     target = "dryvist/delegate-to-router";
   }
   {
-    input = "ai-assistant-instructions";
-    skill = "agentsmd/skills/openrouter-models";
+    input = "claude-code-plugins";
+    skill = "ai-delegation/skills/openrouter-models";
     target = "dryvist/openrouter-models";
   }
 ]

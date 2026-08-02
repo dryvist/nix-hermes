@@ -9,13 +9,13 @@
 #
 # Skills come from two places. Most are authored here under data/skills. Skills
 # every harness needs — identical behavior for this agent and for the
-# workstation CLIs — are authored once in ai-assistant-instructions and enter
-# through data/shared-skills-allowlist.nix, which carries the human safety
-# review each one required.
+# workstation CLIs — are authored once in the claude-code-plugins marketplace
+# and enter through data/shared-skills-allowlist.nix, which carries the human
+# safety review each one required.
 {
   pkgs,
   ai-llm-prompts,
-  ai-assistant-instructions,
+  claude-code-plugins,
 }:
 
 let
@@ -25,7 +25,7 @@ let
   # input must be added here and to the function arguments, so an entry can
   # never name an input this derivation does not actually receive.
   sharedSkillInputs = {
-    inherit ai-assistant-instructions;
+    inherit claude-code-plugins;
   };
 
   allowlist = import ../data/shared-skills-allowlist.nix;

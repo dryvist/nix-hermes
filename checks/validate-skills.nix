@@ -25,9 +25,17 @@ pkgs.runCommand "validate-skills" { } ''
   for d in $skills; do
     s="$d/SKILL.md"
     [ -f "$s" ] || { echo "missing SKILL.md: $d"; fail=1; continue; }
-    for field in name description version; do
+    for field in name description; do
       grep -q "^$field:" "$s" || { echo "missing frontmatter '$field': $s"; fail=1; }
     done
+    # `version` is matched at any indent, unlike name and description. Skills
+    # authored in the plugin marketplace must satisfy the agentskills.io spec,
+    # whose top-level key set is closed and excludes `version` — there it lives
+    # under `metadata:`. Anchoring this to column 0 would reject the shared
+    # skills for spelling their version the only way their own CI permits, and
+    # the fix would be forking the file, which is what the allowlist exists to
+    # prevent. What is being asserted is that a version is declared at all.
+    grep -qE '^ *version:' "$s" || { echo "missing frontmatter 'version': $s"; fail=1; }
   done
 
   ${assertShared}

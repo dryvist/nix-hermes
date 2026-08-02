@@ -23,8 +23,8 @@
     # UNMERGED branch revision — repin to merged main before this lands.
     #
     # MERGE ORDER (load-bearing in both directions, do not reorder):
-    #   1. ai-llm-prompts  PR #26  -> its main    (trunk-flow repo)
-    #   2. ai-assistant-instructions PR #793 -> its develop (git-flow repo)
+    #   1. ai-llm-prompts       PR #26  -> its main (trunk-flow repo)
+    #   2. claude-code-plugins  PR #450 -> its main (trunk-flow repo)
     #   3. repin BOTH inputs here to those merged revisions
     #   4. this PR lands
     # checks/validate-skills.nix asserts content that only exists at or after
@@ -45,17 +45,25 @@
     };
 
     # Owner of cross-harness skills — the ones whose behavior must be identical
-    # here and on the workstation CLIs. Consumed only through
+    # here and on the workstation CLIs. This is the plugin marketplace, and it
+    # owns every skill in the estate that is not authored in data/skills here;
+    # ai-assistant-instructions deliberately ships configuration only, so a
+    # skill may not live there. Consumed only through
     # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
     #
-    # UNMERGED branch revision — repin to merged develop before this lands.
+    # The marketplace layout is Claude Code's, but the two skills taken from it
+    # are not: they use only shell, curl, and jq, name no model id, and read
+    # their endpoint from the environment. Nothing in them assumes a Claude
+    # session, which is what makes one authored copy serve both harnesses.
+    #
+    # UNMERGED branch revision — repin to merged main before this lands.
     # Step 2 of the merge order stated at ai-llm-prompts above; both inputs are
     # unmerged, so neither may keep a branch pin at merge time. A green build
     # proves nothing about WHICH revision it built against — that is precisely
     # how a stale pin shipped a persona missing its doctrine earlier in this
     # branch, which is why validate-skills now asserts content, not just shape.
-    ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/663e336";
+    claude-code-plugins = {
+      url = "github:dryvist/claude-code-plugins/786e1f1";
       flake = false;
     };
   };
@@ -79,7 +87,7 @@
         let
           bundle = import ./lib/bundle.nix {
             inherit pkgs;
-            inherit (inputs) ai-llm-prompts ai-assistant-instructions;
+            inherit (inputs) ai-llm-prompts claude-code-plugins;
           };
         in
         {
