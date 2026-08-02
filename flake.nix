@@ -18,10 +18,61 @@
     };
 
     # Immutable source of truth for the shared autonomous base and Hermes
-    # surface prompts. Skills remain owned by this repository.
+    # surface prompts. Repo-local skills stay owned by this repository.
+    #
+    # MERGE ORDER (load-bearing in both directions, do not reorder):
+    #   1. ai-llm-prompts       PR #26  -> its main  [DONE, pinned below]
+    #   2. claude-code-plugins  PR #450 -> its main (trunk-flow repo)
+    #   3. repin claude-code-plugins here to that merged revision
+    #   4. this PR lands
+    # checks/validate-skills.nix asserts content that only exists at or after
+    # step 1, so landing this first fails the build rather than shipping
+    # quietly. That is the gate working, not a coupling to route around.
+    #
+    # Pinned at main's tip: 18e70c0 is the release commit sitting on c9bf665,
+    # the squash of PR #26. The branch revision this input carried until now
+    # (d7a4a20) is NOT an ancestor of main — a squash merge rewrites the commit,
+    # so the pre-merge sha survives only as long as the branch does and names
+    # nothing on the repo's history line once it is deleted. Verified before
+    # repinning that all three sentinel strings survive the squash; a squash can
+    # silently drop content, and only a re-probe proves it did not.
+    #
+    # No older pin is a safe fallback, and the two nearest are unsafe for
+    # OPPOSITE reasons — do not "roll back" to either without reading both:
+    #   7b427bbf (pre-doctrine) carries the honest self-enforced spend figure
+    #     but none of the delegation doctrine.
+    #   f087d04  carries the doctrine but DELETED that figure, on the since-
+    #     disproven premise that the router enforced the cap. It does not, so
+    #     that revision leaves an unattended agent with no spend control at all
+    #     while telling it one is in force. The sentinel rejects it by design.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/7b427bbf9bc9c36374925fcfeedda0c3b1d8fe93";
+      url = "github:dryvist/ai-llm-prompts/18e70c0";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Owner of cross-harness skills — the ones whose behavior must be identical
+    # here and on the workstation CLIs. This is the plugin marketplace, and it
+    # owns every skill in the estate that is not authored in data/skills here;
+    # ai-assistant-instructions deliberately ships configuration only, so a
+    # skill may not live there. Consumed only through
+    # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
+    #
+    # The marketplace layout is Claude Code's, but the two skills taken from it
+    # are not: they use only shell, curl, and jq, name no model id, and read
+    # their endpoint from the environment. Nothing in them assumes a Claude
+    # session, which is what makes one authored copy serve both harnesses.
+    #
+    # UNMERGED branch revision — the last one left, and step 2 of the merge
+    # order stated at ai-llm-prompts above. It may not keep a branch pin at
+    # merge time: PR #450 targets main and will be squashed, so this sha stops
+    # naming anything on that repo's history line the moment the branch is
+    # deleted. A green build proves nothing about WHICH revision it built
+    # against — that is precisely how a stale pin shipped a persona missing its
+    # doctrine earlier in this branch, which is why validate-skills now asserts
+    # content, not just shape.
+    claude-code-plugins = {
+      url = "github:dryvist/claude-code-plugins/fe173de";
+      flake = false;
     };
   };
 
@@ -44,7 +95,7 @@
         let
           bundle = import ./lib/bundle.nix {
             inherit pkgs;
-            inherit (inputs) ai-llm-prompts;
+            inherit (inputs) ai-llm-prompts claude-code-plugins;
           };
         in
         {

@@ -7,15 +7,48 @@
 # autonomous-base.md plus the canonical Hermes surface. OKF frontmatter is
 # stripped before delivery; prompt ownership never drifts back into this repo.
 #
-# Shared workstation skills (nix-ai / claude plugin ecosystem) are NOT copied
-# here yet: data/shared-skills-allowlist.nix documents the mechanism, and each
-# skill enters only after a human safety review (an unattended autonomous
-# agent is not a workstation assistant).
-{ pkgs, ai-llm-prompts }:
+# Skills come from two places. Most are authored here under data/skills. Skills
+# every harness needs — identical behavior for this agent and for the
+# workstation CLIs — are authored once in the claude-code-plugins marketplace
+# and enter through data/shared-skills-allowlist.nix, which carries the human
+# safety review each one required.
+{
+  pkgs,
+  ai-llm-prompts,
+  claude-code-plugins,
+}:
+
+let
+  inherit (pkgs) lib;
+
+  # Resolves an allowlist entry's `input` name to its store path. A new source
+  # input must be added here and to the function arguments, so an entry can
+  # never name an input this derivation does not actually receive.
+  sharedSkillInputs = {
+    inherit claude-code-plugins;
+  };
+
+  allowlist = import ../data/shared-skills-allowlist.nix;
+
+  copyShared = lib.concatMapStrings (entry: ''
+    if [ -e "$out/skills/${entry.target}" ]; then
+      echo "shared skill '${entry.target}' collides with a local data/skills copy;" >&2
+      echo "delete the local copy in the same change — ending the duplication is the point" >&2
+      exit 1
+    fi
+    mkdir -p "$out/skills/${entry.target}"
+    cp -R ${sharedSkillInputs.${entry.input}}/${entry.skill}/. "$out/skills/${entry.target}/"
+  '') allowlist;
+in
 
 pkgs.runCommand "hermes-bundle" { } ''
   mkdir -p $out/skills
   cp -R ${../data/skills}/. $out/skills/
+  # Copies from the store arrive read-only, which would block writing shared
+  # skills into the same tree.
+  chmod -R u+w $out/skills
+
+  ${copyShared}
 
   # SOUL.md = provenance comment + the two catalog bodies. Each OKF document
   # begins with YAML frontmatter bounded by `---`; sed removes only that first
