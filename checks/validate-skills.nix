@@ -1,6 +1,20 @@
 # Bundle contract check: every shipped skill carries the frontmatter Hermes'
-# skill loader needs, and SOUL.md really is base + Hermes variant.
+# skill loader needs, every allowlisted shared skill actually arrived, and
+# SOUL.md really is base + Hermes variant.
 { pkgs, bundle }:
+
+let
+  inherit (pkgs) lib;
+  allowlist = import ../data/shared-skills-allowlist.nix;
+
+  # A shared skill that silently fails to copy would leave the agent with no
+  # skill at all — worse than the duplicate it replaced, and invisible, since
+  # the loop above only checks whatever happens to be present.
+  assertShared = lib.concatMapStrings (entry: ''
+    [ -f "${bundle}/skills/${entry.target}/SKILL.md" ] || {
+      echo "allowlisted shared skill missing from bundle: ${entry.target}"; fail=1; }
+  '') allowlist;
+in
 
 pkgs.runCommand "validate-skills" { } ''
   fail=0
@@ -15,6 +29,8 @@ pkgs.runCommand "validate-skills" { } ''
       grep -q "^$field:" "$s" || { echo "missing frontmatter '$field': $s"; fail=1; }
     done
   done
+
+  ${assertShared}
 
   # SOUL sentinels: the shared base block and the Hermes surface variant.
   grep -q 'autonomous engineering agent' ${bundle}/SOUL.md || { echo "SOUL.md missing base"; fail=1; }

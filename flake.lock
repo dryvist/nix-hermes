@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "ai-assistant-instructions": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785688693,
+        "narHash": "sha256-sYLeeZqJ/YbVWLzGFY9Z3RV0oS3RsqjooBvdjJDE8x0=",
+        "owner": "dryvist",
+        "repo": "ai-assistant-instructions",
+        "rev": "0e66320e8c5b0120638504afd84315f2aca6b898",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dryvist",
+        "repo": "ai-assistant-instructions",
+        "rev": "0e66320e8c5b0120638504afd84315f2aca6b898",
+        "type": "github"
+      }
+    },
     "ai-llm-prompts": {
       "inputs": {
         "nixpkgs": [
@@ -142,6 +159,7 @@
     },
     "root": {
       "inputs": {
+        "ai-assistant-instructions": "ai-assistant-instructions",
         "ai-llm-prompts": "ai-llm-prompts",
         "dryvist-github": "dryvist-github",
         "flake-parts": "flake-parts",

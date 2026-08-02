@@ -18,10 +18,18 @@
     };
 
     # Immutable source of truth for the shared autonomous base and Hermes
-    # surface prompts. Skills remain owned by this repository.
+    # surface prompts. Repo-local skills stay owned by this repository.
     ai-llm-prompts = {
       url = "github:dryvist/ai-llm-prompts/7b427bbf9bc9c36374925fcfeedda0c3b1d8fe93";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Owner of cross-harness skills — the ones whose behavior must be identical
+    # here and on the workstation CLIs. Consumed only through
+    # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
+    ai-assistant-instructions = {
+      url = "github:dryvist/ai-assistant-instructions/0e66320e8c5b0120638504afd84315f2aca6b898";
+      flake = false;
     };
   };
 
@@ -44,7 +52,7 @@
         let
           bundle = import ./lib/bundle.nix {
             inherit pkgs;
-            inherit (inputs) ai-llm-prompts;
+            inherit (inputs) ai-llm-prompts ai-assistant-instructions;
           };
         in
         {
