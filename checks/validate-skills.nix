@@ -47,11 +47,25 @@ pkgs.runCommand "validate-skills" { } ''
   grep -q 'Delegate bounded work to the shared router' ${bundle}/SOUL.md \
     || { echo "SOUL.md missing delegation doctrine (stale ai-llm-prompts pin?)"; fail=1; }
 
-  # Spend caps are enforced by the router against this agent's key. A figure
-  # written into the persona is prose the agent cannot enforce and that drifts
-  # from router config the moment the cap moves.
-  ! grep -qE '\$[0-9]+(\.[0-9]+)?\s*(/|per )\s*day' ${bundle}/SOUL.md \
-    || { echo "SOUL.md states a spend figure; budgets are router-enforced"; fail=1; }
+  # INVERTED 2026-08-02, and the inversion is the point. This gate used to
+  # assert the persona states NO spend figure, on the premise that the router
+  # enforced the cap. It does not: the LiteLLM proxy is deliberately
+  # storage-less, spend metering needs a shared store it lacks, and one shared
+  # credential serves every caller so there is nothing to meter per caller.
+  #
+  # With no enforcement anywhere, a figure in the persona is not redundant
+  # prose — it is the ONLY control that exists, because the agent is the only
+  # thing that can apply it. The old gate was therefore failing the build to
+  # protect a claim that was false, and deleting the figure left the unattended
+  # agent with no cap at all while telling it one was in force.
+  #
+  # So: require the figure, and require it to be marked self-enforced. If a
+  # deployment ever does enforce spend, this assertion is what must be
+  # revisited first.
+  grep -qE '\$[0-9]+(\.[0-9]+)?/day' ${bundle}/SOUL.md \
+    || { echo "SOUL.md states no spend cap; nothing else enforces one"; fail=1; }
+  grep -q 'YOU enforce' ${bundle}/SOUL.md \
+    || { echo "SOUL.md's spend cap is not marked self-enforced"; fail=1; }
 
   [ "$fail" -eq 0 ] || exit 1
   touch $out

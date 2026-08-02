@@ -26,7 +26,7 @@
     # enforce, so merging against it would ship the exact divergence this
     # change removes. See the repin note on ai-assistant-instructions below.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/f087d0407615982bb44e5d1bc77c1b40434146d4";
+      url = "github:dryvist/ai-llm-prompts/d7a4a20";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -39,7 +39,7 @@
     # branch pin at merge time, and a build that succeeds proves nothing about
     # which revision it built against.
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/282b858";
+      url = "github:dryvist/ai-assistant-instructions/ad83cf2";
       flake = false;
     };
   };

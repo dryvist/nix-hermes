@@ -3,16 +3,16 @@
     "ai-assistant-instructions": {
       "flake": false,
       "locked": {
-        "lastModified": 1785689401,
-        "narHash": "sha256-wpa0nvQx83j4j49bRtp9bOYXwJhBCa3CCIJwoV9ZodQ=",
+        "lastModified": 1785691215,
+        "narHash": "sha256-oqpLw3s2jSinHjRZsu+F9IA6rzKHpifhmQSUb+XGPhk=",
         "owner": "dryvist",
         "repo": "ai-assistant-instructions",
-        "rev": "282b858bd0aecd55ae9da8b6c4cb13e67aa73ddc",
+        "rev": "ad83cf255e3442403acc4ecf930c294a5b0405d2",
         "type": "github"
       },
       "original": {
         "owner": "dryvist",
-        "ref": "282b858",
+        "ref": "ad83cf2",
         "repo": "ai-assistant-instructions",
         "type": "github"
       }
@@ -24,17 +24,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785688929,
-        "narHash": "sha256-K7Twx1TbmYfKb49iLUknTFIeptVnCHT/zA752KBwvEk=",
+        "lastModified": 1785691149,
+        "narHash": "sha256-/XqqI0qqkemqumxK5ABQTOSAy8iBUdbV+qWV6ZtWys4=",
         "owner": "dryvist",
         "repo": "ai-llm-prompts",
-        "rev": "f087d0407615982bb44e5d1bc77c1b40434146d4",
+        "rev": "d7a4a203f88088de65c62e36a2b7479c9bf4e27b",
         "type": "github"
       },
       "original": {
         "owner": "dryvist",
+        "ref": "d7a4a20",
         "repo": "ai-llm-prompts",
-        "rev": "f087d0407615982bb44e5d1bc77c1b40434146d4",
         "type": "github"
       }
     },
