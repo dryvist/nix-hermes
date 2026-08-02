@@ -28,7 +28,7 @@
     # here and on the workstation CLIs. Consumed only through
     # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/0e66320e8c5b0120638504afd84315f2aca6b898";
+      url = "github:dryvist/ai-assistant-instructions/282b858";
       flake = false;
     };
   };
