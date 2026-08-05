@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.9.0...nix-hermes-v0.10.0) (2026-08-05)
+
+
+### Features
+
+* repin ai-llm-prompts to pick up the Hermes output contract ([#46](https://github.com/dryvist/nix-hermes/issues/46)) ([c01d118](https://github.com/dryvist/nix-hermes/commit/c01d118507d8da71fcf065cb03e27079839ad4ec))
+
 ## [0.9.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.8.0...nix-hermes-v0.9.0) (2026-08-02)
 
 
