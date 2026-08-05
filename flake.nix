@@ -4,7 +4,7 @@
   inputs = {
     # Channel branch = intended pin (unstable). Renovate CANNOT bump this: it
     # updates an input when its ref changes, and a channel branch's ref never
-    # changes. deps-refresh-nixpkgs.yml refreshes the lock on a schedule.
+    # changes. deps-flake-lock.yml relocks the whole file on a schedule.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     flake-parts = {
