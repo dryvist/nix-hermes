@@ -46,7 +46,7 @@
     #     that revision leaves an unattended agent with no spend control at all
     #     while telling it one is in force. The sentinel rejects it by design.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/18e70c0";
+      url = "github:dryvist/ai-llm-prompts/ed8e4b450d9645dbb5764c01e1d7839b0f40fe90";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
