@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.10.0...nix-hermes-v0.11.0) (2026-08-05)
+
+
+### Features
+
+* **ci:** relock the whole flake into a single pull request ([#50](https://github.com/dryvist/nix-hermes/issues/50)) ([255bc19](https://github.com/dryvist/nix-hermes/commit/255bc19a535196c0d81e585b07c0e6934e1e12a1))
+
 ## [0.10.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.9.0...nix-hermes-v0.10.0) (2026-08-05)
 
 
