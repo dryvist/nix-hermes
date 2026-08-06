@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.11.0...nix-hermes-v0.12.0) (2026-08-06)
+
+
+### Features
+
+* **bundle:** build a bundle per agent, and add donna-bundle ([#54](https://github.com/dryvist/nix-hermes/issues/54)) ([0f64c92](https://github.com/dryvist/nix-hermes/commit/0f64c92d29becb65328091f315c2bdaccd3ffa26))
+
 ## [0.11.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.10.0...nix-hermes-v0.11.0) (2026-08-05)
 
 
