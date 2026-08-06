@@ -117,6 +117,11 @@
           # what that check validates — skill frontmatter and the Hermes SOUL
           # sentinels — is either identical across bundles or Hermes-specific.
           bundle = mkBundle "hermes";
+
+          # Bound rather than written inline under `packages` because it has to
+          # appear in BOTH packages and checks. The checks entry is the
+          # load-bearing one; see there for why.
+          donnaBundle = mkBundle "donna";
         in
         {
           # data/ is verbatim agent content (skills + SOUL variant) consumed
@@ -133,12 +138,34 @@
 
           packages = {
             hermes-bundle = bundle;
-            donna-bundle = mkBundle "donna";
+            donna-bundle = donnaBundle;
             default = bundle;
           };
 
-          checks.validate-skills = import ./checks/validate-skills.nix {
-            inherit pkgs bundle;
+          checks = {
+            validate-skills = import ./checks/validate-skills.nix {
+              inherit pkgs bundle;
+            };
+
+            # Listed as a CHECK, not merely a package, because `nix flake
+            # check` EVALUATES packages without building them — it prints
+            # "build skipped" and passes. Confirmed against a probe flake whose
+            # package builder was `exit 1`: flake check reported it green.
+            #
+            # That distinction is the whole point here. Everything proving this
+            # bundle is correct — the shared base block arrived, the Donna
+            # surface arrived, no OKF frontmatter leaked — is asserted inside
+            # the derivation's builder (lib/bundle.nix), so a package that is
+            # never built asserts nothing while still showing a green check.
+            # A stale or renamed ai-llm-prompts fragment would ship silently,
+            # which is the exact failure mode the pin comments above exist to
+            # prevent for Hermes.
+            #
+            # hermes-bundle needs no equivalent line only because
+            # validate-skills takes it as an input, and that dependency is what
+            # forces its build. Delete that check and Hermes loses this
+            # protection too — the coverage is a side effect, not a decision.
+            donna-bundle = donnaBundle;
           };
         };
     };
