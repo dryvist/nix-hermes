@@ -45,8 +45,18 @@
     #     disproven premise that the router enforced the cap. It does not, so
     #     that revision leaves an unattended agent with no spend control at all
     #     while telling it one is in force. The sentinel rejects it by design.
+    #   d8caf8c  adds auto-ai-agent/donna.md, the second agent's surface. It
+    #     leaves autonomous-base.md and hermes.md byte-identical to ed8e4b4, so
+    #     this bump does not change what hermes-bundle SHIPS. Verified by
+    #     rebuilding at both pins and diffing the outputs: `diff -r` reports no
+    #     difference and SOUL.md hashes to c4b725cd either way.
+    #
+    #     Compare CONTENT, not the store path. These derivations are
+    #     input-addressed, so bumping this rev moves hermes-bundle's path even
+    #     when every shipped byte is the same — a path change here is expected
+    #     and proves nothing on its own, in either direction.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/ed8e4b450d9645dbb5764c01e1d7839b0f40fe90";
+      url = "github:dryvist/ai-llm-prompts/d8caf8ca3dc4ef224a160fd6b6a2fd3b93ee01fd";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -93,10 +103,25 @@
       perSystem =
         { pkgs, ... }:
         let
-          bundle = import ./lib/bundle.nix {
-            inherit pkgs;
-            inherit (inputs) ai-llm-prompts claude-code-plugins;
-          };
+          # One derivation per agent, differing only in which catalog surface
+          # is appended to the shared base. The skills are identical, so the
+          # two bundles share every input but that one fragment.
+          mkBundle =
+            agent:
+            import ./lib/bundle.nix {
+              inherit pkgs agent;
+              inherit (inputs) ai-llm-prompts claude-code-plugins;
+            };
+
+          # Still named `bundle` because the skills check below consumes it, and
+          # what that check validates — skill frontmatter and the Hermes SOUL
+          # sentinels — is either identical across bundles or Hermes-specific.
+          bundle = mkBundle "hermes";
+
+          # Bound rather than written inline under `packages` because it has to
+          # appear in BOTH packages and checks. The checks entry is the
+          # load-bearing one; see there for why.
+          donnaBundle = mkBundle "donna";
         in
         {
           # data/ is verbatim agent content (skills + SOUL variant) consumed
@@ -113,11 +138,34 @@
 
           packages = {
             hermes-bundle = bundle;
+            donna-bundle = donnaBundle;
             default = bundle;
           };
 
-          checks.validate-skills = import ./checks/validate-skills.nix {
-            inherit pkgs bundle;
+          checks = {
+            validate-skills = import ./checks/validate-skills.nix {
+              inherit pkgs bundle;
+            };
+
+            # Listed as a CHECK, not merely a package, because `nix flake
+            # check` EVALUATES packages without building them — it prints
+            # "build skipped" and passes. Confirmed against a probe flake whose
+            # package builder was `exit 1`: flake check reported it green.
+            #
+            # That distinction is the whole point here. Everything proving this
+            # bundle is correct — the shared base block arrived, the Donna
+            # surface arrived, no OKF frontmatter leaked — is asserted inside
+            # the derivation's builder (lib/bundle.nix), so a package that is
+            # never built asserts nothing while still showing a green check.
+            # A stale or renamed ai-llm-prompts fragment would ship silently,
+            # which is the exact failure mode the pin comments above exist to
+            # prevent for Hermes.
+            #
+            # hermes-bundle needs no equivalent line only because
+            # validate-skills takes it as an input, and that dependency is what
+            # forces its build. Delete that check and Hermes loses this
+            # protection too — the coverage is a side effect, not a decision.
+            donna-bundle = donnaBundle;
           };
         };
     };
