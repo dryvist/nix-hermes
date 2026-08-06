@@ -28,10 +28,9 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 
 ## Hermes runtime behavior (non-obvious)
 
-- **Memory is a frozen snapshot.** Changes made during a session (kanban,
-  memory writes) do not appear in the system prompt until the *next* session
-  starts. `MEMORY.md` is bounded (~2,200 chars); the agent consolidates it
-  when full.
+- **Memory is a frozen snapshot.** Memory written during a session does not
+  appear in the system prompt until the *next* session starts. `MEMORY.md` is
+  bounded (~2,200 chars); the agent consolidates it when full.
 - **Cron jobs run in a fresh session** with no memory of prior runs. The
   prompt must be fully self-contained. Temporal filtering ("past 24 hours")
   is the official guide's only anti-repetition answer and is not sufficient
