@@ -72,14 +72,22 @@
     # their endpoint from the environment. Nothing in them assumes a Claude
     # session, which is what makes one authored copy serve both harnesses.
     #
-    # UNMERGED branch revision — the last one left, and step 2 of the merge
-    # order stated at ai-llm-prompts above. It may not keep a branch pin at
-    # merge time: PR #450 targets main and will be squashed, so this sha stops
-    # naming anything on that repo's history line the moment the branch is
-    # deleted. A green build proves nothing about WHICH revision it built
-    # against — that is precisely how a stale pin shipped a persona missing its
-    # doctrine earlier in this branch, which is why validate-skills now asserts
+    # MERGED, and the merge order above is complete. fe173de is the merge
+    # commit of PR #450 itself, verified an ancestor of that repo's main
+    # (compare fe173de...main reports behind_by 0), so it names a permanent
+    # point on the history line and survives the branch being deleted. The
+    # earlier note here called it an unmerged branch revision; that was true
+    # when written and is not now.
+    #
+    # A green build still proves nothing about WHICH revision it built against
+    # — that is precisely how a stale pin shipped a persona missing its
+    # doctrine earlier in this branch, which is why validate-skills asserts
     # content, not just shape.
+    #
+    # An explicit rev makes this input immune to `nix flake update`: the
+    # relock re-resolves the same sha every week, so nothing moves it. The
+    # flake-explicit-rev Renovate manager in renovate.json is what proposes a
+    # newer one; see the note there before removing either.
     claude-code-plugins = {
       url = "github:dryvist/claude-code-plugins/fe173de";
       flake = false;

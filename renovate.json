@@ -1,4 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>dryvist/.github:renovate-nix"]
+  "extends": ["local>dryvist/.github:renovate-nix"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": [
+        "Flake inputs pinned to an EXPLICIT revision inside the URL, e.g. `github:owner/repo/<40-char-sha>`. Tracked as git-refs digests against the default branch.",
+        "This does not conflict with the single-writer rule for flake.lock stated in renovate-nix.json. That rule exists because Renovate's `nix` manager and the weekly relock would both write flake.lock; this manager writes flake.NIX, proposing a newer revision for a pin the relock provably cannot move.",
+        "Verified by running the relock in a worktree: `nix flake update` advanced nixpkgs and dryvist-github, and left ai-llm-prompts and claude-code-plugins byte-identical. An explicit rev re-resolves to itself every week, so without this manager those two inputs are frozen permanently and nothing in the estate can ever propose a newer one.",
+        "A bump here leaves flake.lock stale. `nix flake check` does NOT catch that — it silently rewrites the lock in the working tree and exits 0, so CI goes green and the merge lands flake.nix and flake.lock disagreeing. The lock-consistency job in ci.yml is what turns that red; do not remove it while this manager exists."
+      ],
+      "managerFilePatterns": ["/(^|/)flake\\.nix$/"],
+      "matchStrings": [
+        "url = \"github:(?<depName>[^/\"]+/[^/\"]+)/(?<currentDigest>[0-9a-f]{7,40})\""
+      ],
+      "datasourceTemplate": "git-refs",
+      "depNameTemplate": "https://github.com/{{{depName}}}",
+      "currentValueTemplate": "main"
+    }
+  ]
 }
