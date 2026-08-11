@@ -15,3 +15,23 @@ jobs:
     uses: dryvist/.github/.github/workflows/_nix-validate.yml@main
     with:
       all_systems: false
+
+  # flake.nix and flake.lock must agree, and `nix flake check` does not assert
+  # that — see .github/scripts/check-lock-consistency.sh for what it does
+  # instead. Needed because the flake-explicit-rev Renovate manager
+  # (renovate.json) proposes revision bumps in flake.nix, each of which needs a
+  # matching lock refresh.
+  lock-consistency:
+    name: Lock Consistency
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@d96678350ffd6a456235832eb11e1c491589b7bb # v3
+
+      - name: Assert flake.lock matches flake.nix
+        run: .github/scripts/check-lock-consistency.sh
