@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.12.0...nix-hermes-v0.13.0) (2026-08-13)
+
+
+### Features
+
+* bundle Browser Use skill for Hermes ([#63](https://github.com/dryvist/nix-hermes/issues/63)) ([8fab163](https://github.com/dryvist/nix-hermes/commit/8fab163625cc12ec1787bdfda17230fbe018ab95))
+
+
+### Bug Fixes
+
+* **renovate:** track flake inputs pinned to an explicit revision ([#61](https://github.com/dryvist/nix-hermes/issues/61)) ([f4c04b5](https://github.com/dryvist/nix-hermes/commit/f4c04b51b69213ee595bbff3c608e9425455ee47))
+
 ## [0.12.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.11.0...nix-hermes-v0.12.0) (2026-08-06)
 
 
