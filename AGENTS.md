@@ -10,7 +10,7 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 | Path                               | Role                                                                         |
 | ---------------------------------- | ---------------------------------------------------------------------------- |
 | `data/skills/dryvist/<skill>/`     | Hermes-specific skills (SKILL.md + scripts + tests)                          |
-| `data/shared-skills-allowlist.nix` | Empty-by-design gate for workstation skills (human review per entry)         |
+| `data/shared-skills-allowlist.nix` | Opt-in gate for workstation skills, one reviewed entry each (2 today)        |
 | `lib/bundle.nix`                   | Composes SOUL from the pinned `ai-llm-prompts` base and Hermes prompt bodies |
 | `checks/validate-skills.nix`       | Frontmatter + SOUL sentinel contract check                                   |
 
@@ -19,12 +19,21 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 - SOUL.md prompts are NEVER vendored here. They are read from the immutable
   `ai-llm-prompts` input and have OKF frontmatter stripped at build time.
   This repository continues to own Hermes skills only.
-- Skill frontmatter must keep `name:`, `description:`, `version:` (the check
-  fails the flake otherwise) and the `metadata.hermes` block Hermes uses.
+- Locally authored `data/skills/dryvist/` skills must keep `name:`,
+  `description:`, `version:`, and the `metadata.hermes` block Hermes uses.
+  Allowlisted upstream skills are delivered byte-for-byte under their own
+  upstream contract.
 - Consumers pin release tags. Content changes here reach the agent only after
-  a release + a pin bump in ansible-proxmox-apps.
+  a release + a pin bump in `ansible-proxmox-ai` (the `hermes_agent` role lives
+  there, not in `ansible-proxmox-apps`).
 - Git-flow: default branch `develop`; merges to `main` release via
   release-please.
+- A flake input pinned to an explicit revision in its URL is immune to
+  `nix flake update` — the weekly relock re-resolves the same sha forever. Such
+  pins are proposed by the `flake-explicit-rev` Renovate manager in
+  `renovate.json`, and a bump there needs a matching `nix flake lock`. The
+  Lock Consistency CI job enforces that, because `nix flake check` does not:
+  given a stale lock it rewrites the file and exits 0.
 
 ## Hermes runtime behavior (non-obvious)
 
