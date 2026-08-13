@@ -21,9 +21,9 @@
 #
 # No frontmatter translation step exists, and none may be added: a skill is
 # delivered byte-for-byte or not at all, because a file patched in transit is a
-# second version of itself that no reader of the upstream copy can see. Both
-# entries below carry name, description, a version, and a metadata.hermes block;
-# an entry lacking those must gain them upstream.
+# second version of itself that no reader of the upstream copy can see. Locally
+# authored dryvist skills carry the Hermes metadata contract. Imported skills
+# retain their upstream contract and are checked separately for arrival.
 #
 # Their version sits under `metadata:`, not at the top level, and that is not a
 # stylistic difference. claude-code-plugins validates every SKILL.md against the
@@ -37,7 +37,8 @@
 # ---------------------------------------------------------------------------
 # Review record
 #
-# Both entries reviewed for an unattended agent holding standing credentials.
+# The two Dryvist marketplace entries below were reviewed for an unattended
+# agent holding standing credentials.
 # They are advisory: they describe how to choose and call a model the router
 # already serves this agent, and grant no capability it does not already have.
 # Specifically checked:
@@ -60,6 +61,13 @@
 #     from absorbing unbounded work without saying so.
 #   - Neither embeds a model name, so neither can drift from the router's
 #     served inventory the way the local copy deleted alongside this had.
+#
+# Browser Use was reviewed separately. It gives Hermes terminal-driven browser
+# navigation using the existing loopback-only Chromium CDP endpoint; it does
+# not grant a cloud Browser Use account or a new credential. Hermes already
+# has terminal access, and the deployment verification proves only public
+# documentation retrieval. Any authenticated browsing remains an explicit
+# task-level decision under the existing Hermes credential policy.
 # ---------------------------------------------------------------------------
 [
   {
@@ -71,5 +79,12 @@
     input = "claude-code-plugins";
     skill = "ai-delegation/skills/openrouter-models";
     target = "dryvist/openrouter-models";
+  }
+  {
+    # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
+    # so it intentionally lives outside dryvist/ and is copied verbatim.
+    input = "browser-use";
+    skill = "skills/browser-use";
+    target = "browser-use";
   }
 ]

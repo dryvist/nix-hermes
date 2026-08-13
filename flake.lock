@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "browser-use": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786649293,
+        "narHash": "sha256-H2Py3qwaiHn2jWARSIsGSdSSlqUWyJocN2Iq/2nmxiI=",
+        "owner": "browser-use",
+        "repo": "browser-use",
+        "rev": "6c73fced2f6d45a11d88622fe56365a5fe18f28b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "browser-use",
+        "repo": "browser-use",
+        "type": "github"
+      }
+    },
     "claude-code-plugins": {
       "flake": false,
       "locked": {
@@ -160,6 +176,7 @@
     "root": {
       "inputs": {
         "ai-llm-prompts": "ai-llm-prompts",
+        "browser-use": "browser-use",
         "claude-code-plugins": "claude-code-plugins",
         "dryvist-github": "dryvist-github",
         "flake-parts": "flake-parts",

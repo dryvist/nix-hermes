@@ -15,6 +15,7 @@
 {
   pkgs,
   ai-llm-prompts,
+  browser-use,
   claude-code-plugins,
   # Which persona this bundle carries. The value is BOTH the catalog fragment
   # basename (auto-ai-agent/<agent>.md) and the derivation name prefix, so a
@@ -40,7 +41,7 @@ let
   # input must be added here and to the function arguments, so an entry can
   # never name an input this derivation does not actually receive.
   sharedSkillInputs = {
-    inherit claude-code-plugins;
+    inherit browser-use claude-code-plugins;
   };
 
   allowlist = import ../data/shared-skills-allowlist.nix;
