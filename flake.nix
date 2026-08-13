@@ -92,6 +92,13 @@
       url = "github:dryvist/claude-code-plugins/fe173de";
       flake = false;
     };
+
+    # Official Browser Use skill source. The bundle takes only its reviewed
+    # CLI skill, byte-for-byte, through data/shared-skills-allowlist.nix.
+    browser-use = {
+      url = "github:browser-use/browser-use";
+      flake = false;
+    };
   };
 
   outputs =
@@ -118,7 +125,7 @@
             agent:
             import ./lib/bundle.nix {
               inherit pkgs agent;
-              inherit (inputs) ai-llm-prompts claude-code-plugins;
+              inherit (inputs) ai-llm-prompts browser-use claude-code-plugins;
             };
 
           # Still named `bundle` because the skills check below consumes it, and

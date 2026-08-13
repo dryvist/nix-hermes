@@ -39,7 +39,9 @@ the rest arrive through the allowlist below.
 `data/shared-skills-allowlist.nix` is the explicit, human-reviewed gate for
 pulling in a skill this repository does not author. Hermes runs unattended with
 standing credentials, so each entry is reviewed before it enters and the review
-is recorded in that file.
+is recorded in that file. The official Browser Use CLI skill is delivered at
+`skills/browser-use/` without a Hermes-specific fork; locally authored skills
+remain under `skills/dryvist/`.
 
 It currently carries `delegate-to-router` and `openrouter-models`, authored in
 the `ai-delegation` plugin of the `claude-code-plugins` marketplace and pinned

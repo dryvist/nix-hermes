@@ -19,8 +19,10 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 - SOUL.md prompts are NEVER vendored here. They are read from the immutable
   `ai-llm-prompts` input and have OKF frontmatter stripped at build time.
   This repository continues to own Hermes skills only.
-- Skill frontmatter must keep `name:`, `description:`, `version:` (the check
-  fails the flake otherwise) and the `metadata.hermes` block Hermes uses.
+- Locally authored `data/skills/dryvist/` skills must keep `name:`,
+  `description:`, `version:`, and the `metadata.hermes` block Hermes uses.
+  Allowlisted upstream skills are delivered byte-for-byte under their own
+  upstream contract.
 - Consumers pin release tags. Content changes here reach the agent only after
   a release + a pin bump in `ansible-proxmox-ai` (the `hermes_agent` role lives
   there, not in `ansible-proxmox-apps`).
