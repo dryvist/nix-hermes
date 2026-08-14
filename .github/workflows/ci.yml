@@ -24,6 +24,10 @@ jobs:
   lock-consistency:
     name: Lock Consistency
     runs-on: ubuntu-latest
+    # Intentionally non-negotiable: a Nix lock consistency check past 20
+    # minutes is a dependency/cache regression. Do not raise this cap; fix the
+    # root cause so the failed required check blocks the regression instead.
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
