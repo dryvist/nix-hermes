@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.13.0...nix-hermes-v0.14.0) (2026-08-15)
+
+
+### Features
+
+* **skills:** adopt github-code-search into the Hermes bundle ([#68](https://github.com/dryvist/nix-hermes/issues/68)) ([f1bb65d](https://github.com/dryvist/nix-hermes/commit/f1bb65d23a9d97398293d2ccea18ef5514f31afc))
+
 ## [0.13.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.12.0...nix-hermes-v0.13.0) (2026-08-13)
 
 
