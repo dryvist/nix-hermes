@@ -62,6 +62,32 @@
 #   - Neither embeds a model name, so neither can drift from the router's
 #     served inventory the way the local copy deleted alongside this had.
 #
+# github-code-search was reviewed separately, and its risk shape is different
+# from the delegation pair: it is the only shared skill that sends anything off
+# the estate. Specifically checked:
+#
+#   - It is read-only and keyless. grep.app's MCP server is public and stateless
+#     and exposes exactly one tool, `searchGitHub`; there is no account, no
+#     token, and nothing for the agent to acquire or store. The skill grants no
+#     capability beyond searching public source code — every result is already
+#     world-readable on GitHub.
+#   - It cannot write anywhere. Nothing in it creates an issue, a PR, a comment,
+#     or a file; the output is search hits the agent reads.
+#   - THE WEAK POINT, and the reason this entry exists as its own record: the
+#     query string leaves the estate. grep.app receives it verbatim, and unlike
+#     the workstation there is no human watching the query an unattended run
+#     composes. The skill states the rule inline — never search for a hostname,
+#     credential, internal path, or customer name — but that rule is enforced
+#     only by the agent reading it, exactly like the spend figure above. It is
+#     the same class of self-enforced control and fails the same way: silently.
+#     Revisit if outbound egress ever gets a policy layer that could enforce it.
+#   - A stated query rule is not the same as a redaction step, and none exists.
+#     Nothing here scrubs a query before it is sent. Adding one would be the
+#     real fix; it is not in this change, and that is a known gap, not an
+#     oversight.
+#   - It embeds no model name and reaches no router, so it cannot drift with the
+#     served inventory.
+#
 # Browser Use was reviewed separately. It gives Hermes terminal-driven browser
 # navigation using the existing loopback-only Chromium CDP endpoint; it does
 # not grant a cloud Browser Use account or a new credential. Hermes already
@@ -79,6 +105,15 @@
     input = "claude-code-plugins";
     skill = "ai-delegation/skills/openrouter-models";
     target = "dryvist/openrouter-models";
+  }
+  {
+    # Literal code search over public GitHub, so the agent can find how a
+    # problem was already solved before proposing custom code. Namespaced under
+    # dryvist/ because it is authored in the marketplace alongside the pair
+    # above, not vendored from a third party.
+    input = "claude-code-plugins";
+    skill = "github-workflows/skills/github-code-search";
+    target = "dryvist/github-code-search";
   }
   {
     # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
