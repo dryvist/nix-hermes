@@ -40,17 +40,17 @@
     "claude-code-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1785697767,
-        "narHash": "sha256-jwCngzzJF8vzgNY3gsgo3c3NKHGkYkzd8ifB6sC7vkM=",
+        "lastModified": 1786765956,
+        "narHash": "sha256-jbrdE7WABY7a3USXyjOv0tLYd8TfE8jgsTuveQLhr6w=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "fe173de533704f2645ffd4790d4f5eaee0bfd044",
+        "rev": "547c77e3fa186f676afb798dee4a430c1912a4b7",
         "type": "github"
       },
       "original": {
         "owner": "dryvist",
-        "ref": "fe173de",
         "repo": "claude-code-plugins",
+        "rev": "547c77e3fa186f676afb798dee4a430c1912a4b7",
         "type": "github"
       }
     },
