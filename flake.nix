@@ -72,12 +72,15 @@
     # their endpoint from the environment. Nothing in them assumes a Claude
     # session, which is what makes one authored copy serve both harnesses.
     #
-    # MERGED, and the merge order above is complete. fe173de is the merge
-    # commit of PR #450 itself, verified an ancestor of that repo's main
-    # (compare fe173de...main reports behind_by 0), so it names a permanent
-    # point on the history line and survives the branch being deleted. The
-    # earlier note here called it an unmerged branch revision; that was true
-    # when written and is not now.
+    # Repinned to 547c77e3, the squash commit of PR #459, which is where
+    # github-workflows/skills/github-code-search first exists. Verified before
+    # repinning that it names a permanent point on that repo's history line
+    # (compare 547c77e3...main reports status=identical) and that the SKILL.md
+    # is actually present at that exact rev — a squash can drop content, and
+    # only a re-probe proves it did not.
+    #
+    # The previous pin, fe173de (PR #450's merge commit), predates the skill;
+    # a build against it fails validate-skills rather than shipping quietly.
     #
     # A green build still proves nothing about WHICH revision it built against
     # — that is precisely how a stale pin shipped a persona missing its
@@ -89,7 +92,7 @@
     # flake-explicit-rev Renovate manager in renovate.json is what proposes a
     # newer one; see the note there before removing either.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/fe173de";
+      url = "github:dryvist/claude-code-plugins/547c77e3fa186f676afb798dee4a430c1912a4b7";
       flake = false;
     };
 
