@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.14.0...nix-hermes-v0.15.0) (2026-08-23)
+
+
+### Features
+
+* **skills:** add dryvist/self-audit self-correction loop skill ([#73](https://github.com/dryvist/nix-hermes/issues/73)) ([9837051](https://github.com/dryvist/nix-hermes/commit/9837051082994f0a0745fcd170111731ca972f06))
+
 ## [0.14.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.13.0...nix-hermes-v0.14.0) (2026-08-15)
 
 
