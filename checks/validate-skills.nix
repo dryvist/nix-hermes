@@ -40,6 +40,17 @@ pkgs.runCommand "validate-skills" { } ''
 
   ${assertShared}
 
+  # A skill naming a helper script the bundle does not ship leaves the agent
+  # following instructions it cannot run — silently, since nothing else here
+  # reads a SKILL.md body. General on purpose: the failure class is "the prose
+  # outlived the file", not any one skill.
+  for s in $(find ${bundle}/skills -name SKILL.md); do
+    for ref in $(grep -oE '(scripts|tests)/[A-Za-z0-9_./-]+\.py' "$s" | sort -u); do
+      [ -f "$(dirname "$s")/$ref" ] || {
+        echo "skill references a helper the bundle does not ship: $s -> $ref"; fail=1; }
+    done
+  done
+
   # SOUL sentinels: the shared base block and the Hermes surface variant.
   grep -q 'autonomous engineering agent' ${bundle}/SOUL.md || { echo "SOUL.md missing base"; fail=1; }
   grep -q '^## You are Hermes' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes variant"; fail=1; }
