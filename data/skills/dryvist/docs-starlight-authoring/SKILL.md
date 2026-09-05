@@ -14,8 +14,8 @@ metadata:
 
 # dryvist docs-starlight-authoring
 
-Content rules for `dryvist/docs-starlight` (Astro Starlight, private KB at
-docs.dryvist.com). Use this to shape a page correctly — frontmatter,
+Content rules for `dryvist/docs-starlight`, the private Astro Starlight
+knowledge base. Use this to shape a page correctly — frontmatter,
 components, structure — before handing the change to `docs-pr` for the
 actual signed, draft PR. This skill only covers *what to write*; `docs-pr`
 covers *how it gets committed and opened*. Always defer to `docs-pr` for

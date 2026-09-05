@@ -148,11 +148,6 @@
           # violate MD041 etc.).
           treefmt.settings.global.excludes = [ "data/**" ];
           pre-commit.settings.hooks.markdownlint-cli2.excludes = [ "^data/" ];
-          # The docs-pr redaction unit test contains a FAKE inline PEM marker
-          # string to assert secrets get scrubbed — not a real key.
-          pre-commit.settings.hooks.detect-private-keys.excludes = [
-            "^data/skills/dryvist/docs-pr/tests/test_open_signed_pr\\.py$"
-          ];
 
           packages = {
             hermes-bundle = bundle;

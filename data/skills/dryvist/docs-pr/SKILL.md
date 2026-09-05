@@ -1,7 +1,7 @@
 ---
 name: dryvist-docs-pr
-description: Open signed, draft, no-merge doc PRs to dryvist docs repos
-version: 1.0.0
+description: Open signed, draft, no-merge doc PRs to the private dryvist docs site
+version: 1.1.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -14,28 +14,29 @@ metadata:
 
 # dryvist docs-pr
 
-Contribute documentation to the two dryvist doc sites by opening **draft,
+Contribute documentation to the private dryvist doc site by opening **draft,
 never-merged** pull requests whose commits are **GitHub-verified** (signed). Use
 this after you have curated knowledge in the `llm-wiki` and identified a concrete,
 sourced documentation improvement.
 
-Repos:
-- `dryvist/docs` (PUBLIC, Mintlify) — user-facing public docs, docs.jacobpevans.com.
-- `dryvist/docs-starlight` (PRIVATE, Astro Starlight) — internal docs, docs.dryvist.com.
+Repo: `dryvist/docs-starlight` (PRIVATE, Astro Starlight) — internal docs.
+
+Publishing to the public docs site is not this skill's job: the publish workflow
+in `docs-starlight` projects the pages marked publishable and owns that path end
+to end.
 
 ## Hard rules (never violate)
 
 1. **Draft only. Never merge.** Every PR opens as a draft. You have no authority
    to merge, mark ready, or approve. A human reviews and merges. The org ruleset
    also blocks you — do not try to work around it.
-2. **Signed commits via the API only.** Commit exclusively through
-   `scripts/open_signed_pr.py` (GitHub App + `createCommitOnBranch`). NEVER
-   `git commit`/`git push` — the org requires signed commits and a plain push is
-   rejected.
-3. **Privacy routing is absolute.** Anything internal, sensitive, or secret
-   (hostnames, internal domains, IPs, tokens, private topology) goes to
-   `docs-starlight` ONLY — never to the public `docs`. When unsure, treat it as
-   sensitive. Redact secrets from every string before it leaves the machine.
+2. **Signed commits via the API only.** Commit exclusively through the
+   `createCommitOnBranch` GraphQL mutation, which signs server-side under the
+   App identity. NEVER `git commit`/`git push` — the org requires signed commits
+   and a plain push is rejected.
+3. **Private site only.** Everything you author here targets `docs-starlight`.
+   Never open a PR against the public docs repo, and redact secrets from every
+   string before it leaves the machine.
 4. **No emoji** anywhere in branch names, titles, commit messages, or bodies.
 5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, label
    `cloud-routine`, and a `## Provenance` block in the body naming the source(s).
@@ -44,28 +45,83 @@ Repos:
    exists. If over the cap or a duplicate, decline cleanly — do nothing.
 7. **Small, sourced, voice-preserving.** One focused improvement per PR. Cite
    provenance. Never restyle or rewrite an author's voice.
-8. **Fail loud.** If App creds are missing or a preflight check fails, stop and
+8. **Fail loud.** If the token is missing or a preflight check fails, stop and
    report — never fall back to an unsigned or non-draft path.
+
+## Credential
+
+`GH_TOKEN` is an App installation token, already in your environment. You do not
+mint it and you do not print it. If `gh auth status` reports no token, stop
+(rule 8).
 
 ## Procedure
 
-1. Preflight: `python scripts/open_signed_pr.py --preflight` — confirms the App
-   token mints. Abort on failure.
-2. Decide the target repo by privacy (rule 3). Confirm the change is worth a PR
-   (a real, sourced improvement — otherwise decline).
-3. Prepare the file change(s) as full new file contents.
-4. De-dup: check open PRs; if a matching `docs:` PR exists or the daily cap is
-   hit, stop.
-5. Open the PR via the helper — it creates a dated branch
-   `docs/hermes/<slug>-<YYYY-MM-DD>`, commits signed via the API, and opens a
-   DRAFT PR with the attribution triad. Report the PR URL. Do not touch it again.
+Set `R=dryvist/docs-starlight`, `B=docs/hermes/<slug>-$(date +%F)`.
+
+1. Preflight. Both must succeed before you touch anything:
+
+   ```sh
+   BASE=$(gh api "repos/$R" --jq .default_branch)
+   gh pr list -R "$R" --author @me --state open --json number,title
+   ```
+
+   The second is also your rule 6 check: stop if a matching `docs:` PR is open
+   or you already opened one today.
+
+2. Branch off the default branch's tip:
+
+   ```sh
+   OID=$(gh api "repos/$R/git/ref/heads/$BASE" --jq .object.sha)
+   gh api "repos/$R/git/refs" -f ref="refs/heads/$B" -f sha="$OID"
+   ```
+
+3. Commit signed. `createCommitOnBranch` signs server-side, so there is no key
+   to hold. `contents` is base64 of the **full new file body**, and
+   `expectedHeadOid` is what makes a racing write fail instead of clobber.
+   Every variable is a scalar — `gh api graphql` cannot pass a nested input
+   object, so the input is built inside the query, not handed in as one:
+
+   ```sh
+   gh api graphql \
+     -f repo="$R" -f branch="$B" -f oid="$OID" \
+     -f path="$PATH_IN_REPO" -f b64="$(base64 -w0 "$LOCAL_FILE")" \
+     -f msg="docs: <summary> [routine:hermes]" \
+     -f query='
+     mutation($repo: String!, $branch: String!, $oid: GitObjectID!,
+              $path: String!, $b64: Base64String!, $msg: String!) {
+       createCommitOnBranch(input: {
+         branch: {repositoryNameWithOwner: $repo, branchName: $branch},
+         expectedHeadOid: $oid,
+         message: {headline: $msg},
+         fileChanges: {additions: [{path: $path, contents: $b64}]}
+       }) { commit { oid url } }
+     }'
+   ```
+
+   That shape carries one file. For several, add a `$b64N`/`$pathN` pair per
+   file and a matching entry in `additions` — one commit per PR, so they all go
+   in a single mutation. `deletions: [{path: $path}]` removes a file.
+
+4. Open the draft PR and apply the label:
+
+   ```sh
+   gh pr create -R "$R" --draft --base "$BASE" --head "$B" \
+     --title "docs: <summary> [routine:hermes]" --body-file body.md \
+     --label cloud-routine
+   ```
+
+   `body.md` carries the `## Provenance` block (rule 5). Report the PR URL and
+   do not touch it again.
 
 ## Verification
 
-- The helper's unit tests (`tests/test_open_signed_pr.py`) assert: draft=True,
-  dated branch, `docs:` Conventional-Commit title with the `[routine:hermes]`
-  suffix, `## Provenance` body block, cap/de-dup logic, secret redaction, and
-  privacy routing (sensitive content never targets public `docs`). Run:
-  `python -m pytest tests/ -q`.
-- A live PR is proof only if `gh api repos/<owner>/<repo>/pulls/<n>` shows
-  `draft: true` and the head commit's `verification.verified == true`.
+A PR is proof only if `gh api repos/dryvist/docs-starlight/pulls/<n>` shows
+`draft: true` and the head commit's `verification.verified == true`:
+
+```sh
+gh pr view <n> -R "$R" --json isDraft,headRefOid
+gh api "repos/$R/commits/<oid>" --jq .commit.verification.verified
+```
+
+Both must be true. If `verified` is false the commit did not go through the
+mutation — the PR is invalid, say so and stop.
