@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.15.0...nix-hermes-v0.15.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **agents:** restore the trailing newline on AGENTS.md ([#80](https://github.com/dryvist/nix-hermes/issues/80)) ([3e03350](https://github.com/dryvist/nix-hermes/commit/3e03350a05c2dc699bca84fd3d9b225b271170a8))
+
 ## [0.15.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.14.0...nix-hermes-v0.15.0) (2026-08-23)
 
 
