@@ -1,6 +1,7 @@
 ---
 skill-groups: [core, nix]
 ---
+
 # nix-hermes — AI Agent Documentation
 
 Builds `packages.<system>.hermes-bundle`: the static content tree (skills +
