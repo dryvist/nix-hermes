@@ -37,8 +37,19 @@
 # ---------------------------------------------------------------------------
 # Review record
 #
-# The two Dryvist marketplace entries below were reviewed for an unattended
-# agent holding standing credentials.
+# AMENDMENT: delegate-to-router was removed from the entries below on the
+# claude-code-plugins repin to openbao-v4.22.0 — its source path
+# (ai-delegation/skills/delegate-to-router) no longer exists upstream,
+# replaced there by ai-delegation/skills/local-subagents (upstream commit
+# 4936fea, "replace delegate-to-router with local-subagents"). local-subagents
+# already carries the metadata.version an external vendor needs, but has not
+# been reviewed for this allowlist and is deliberately NOT added here — that
+# review, and the decision whether it is this skill's real replacement, is a
+# separate change. The review below for the ORIGINAL pair is left intact as
+# history; only openrouter-models is still an active entry.
+#
+# The two Dryvist marketplace entries described below were reviewed for an
+# unattended agent holding standing credentials.
 # They are advisory: they describe how to choose and call a model the router
 # already serves this agent, and grant no capability it does not already have.
 # Specifically checked:
@@ -95,22 +106,25 @@
 # documentation retrieval. Any authenticated browsing remains an explicit
 # task-level decision under the existing Hermes credential policy.
 #
-# openbao-secrets was reviewed (content: instructional only, no capability
-# grant beyond Hermes' existing ambient read access, write/apply stays
-# human-gated, no embedded host/credential/model name) but is NOT allowlisted
-# below yet: at claude-code-plugins main (9b5d413), its SKILL.md carries no
-# `version` field at any depth, which checks/validate-skills.nix requires for
-# every shipped skill. Vendoring it here byte-for-byte is not optional per
-# this file's own no-frontmatter-translation rule above, so the missing field
-# needs a real fix upstream (a version added in claude-code-plugins) before
-# this entry can be added.
+# openbao-secrets was reviewed separately. It is instructional only — how to
+# pick a secret's store tier, prefer an engine-minted ephemeral credential
+# over a static one, and read through the pre-authorized ambient tier while
+# write/apply stays behind a human-gated wrapped secret_id. Specifically
+# checked:
+#
+#   - It grants no capability Hermes does not already have: reading a secret
+#     Hermes' own ambient AppRole is already entitled to was already possible
+#     without this skill; the skill only states the correct order of
+#     operations (mint over store, engine over KV) rather than opening a new
+#     door.
+#   - It never instructs storing, printing, or exporting a credential outside
+#     the one process that needs it, and explicitly names write/apply as
+#     human-gated — an unattended agent cannot self-authorize past that gate
+#     by reading this skill.
+#   - It embeds no host, credential, or model name, so it cannot drift or
+#     leak topology on its own.
 # ---------------------------------------------------------------------------
 [
-  {
-    input = "claude-code-plugins";
-    skill = "ai-delegation/skills/delegate-to-router";
-    target = "dryvist/delegate-to-router";
-  }
   {
     input = "claude-code-plugins";
     skill = "ai-delegation/skills/openrouter-models";
@@ -124,6 +138,11 @@
     input = "claude-code-plugins";
     skill = "github-workflows/skills/github-code-search";
     target = "dryvist/github-code-search";
+  }
+  {
+    input = "claude-code-plugins";
+    skill = "openbao/skills/openbao-secrets";
+    target = "dryvist/openbao-secrets";
   }
   {
     # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
