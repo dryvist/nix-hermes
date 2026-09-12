@@ -96,6 +96,22 @@
       flake = false;
     };
 
+    # Owner of the shared agentsmd rules — the always-on behavioral contract
+    # every workstation harness already follows (Claude/Codex/Gemini via
+    # AGENTS.md/CLAUDE.md/GEMINI.md symlinks). Hermes runs unattended and
+    # today follows none of it; lib/bundle.nix appends the same four
+    # always-on files (per that repo's own `agentsmd/rules/rule-tiers.md`)
+    # to SOUL.md and ships the on-demand tier alongside it, so this agent
+    # reads the identical rule set from the identical single source.
+    #
+    # Pinned at develop's tip (670047a), same explicit-rev-immune-to-update
+    # pattern as claude-code-plugins above; bumped by the flake-explicit-rev
+    # Renovate manager.
+    ai-assistant-instructions = {
+      url = "github:dryvist/ai-assistant-instructions/670047a7aab834a557d664754c0303453d701d1e";
+      flake = false;
+    };
+
     # Official Browser Use skill source. The bundle takes only its reviewed
     # CLI skill, byte-for-byte, through data/shared-skills-allowlist.nix.
     browser-use = {
@@ -128,7 +144,12 @@
             agent:
             import ./lib/bundle.nix {
               inherit pkgs agent;
-              inherit (inputs) ai-llm-prompts browser-use claude-code-plugins;
+              inherit (inputs)
+                ai-llm-prompts
+                browser-use
+                claude-code-plugins
+                ai-assistant-instructions
+                ;
             };
 
           # Still named `bundle` because the skills check below consumes it, and

@@ -94,6 +94,16 @@
 # has terminal access, and the deployment verification proves only public
 # documentation retrieval. Any authenticated browsing remains an explicit
 # task-level decision under the existing Hermes credential policy.
+#
+# openbao-secrets was reviewed (content: instructional only, no capability
+# grant beyond Hermes' existing ambient read access, write/apply stays
+# human-gated, no embedded host/credential/model name) but is NOT allowlisted
+# below yet: at claude-code-plugins main (9b5d413), its SKILL.md carries no
+# `version` field at any depth, which checks/validate-skills.nix requires for
+# every shipped skill. Vendoring it here byte-for-byte is not optional per
+# this file's own no-frontmatter-translation rule above, so the missing field
+# needs a real fix upstream (a version added in claude-code-plugins) before
+# this entry can be added.
 # ---------------------------------------------------------------------------
 [
   {
