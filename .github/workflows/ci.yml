@@ -9,13 +9,8 @@ on:
 permissions:
   contents: read
 
+# `nix flake check` runs in the org CI gate (ci-gate.yml, `nix_validate`).
 jobs:
-  nix-validate:
-    name: Nix Validate
-    uses: dryvist/.github/.github/workflows/_nix-validate.yml@main
-    with:
-      all_systems: false
-
   # flake.nix and flake.lock must agree, and `nix flake check` does not assert
   # that — see .github/scripts/check-lock-consistency.sh for what it does
   # instead. Needed because the flake-explicit-rev Renovate manager
