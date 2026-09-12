@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.15.1...nix-hermes-v0.16.0) (2026-09-12)
+
+
+### Features
+
+* **zammad-incidents:** typed tickets with per-type closure rules ([#86](https://github.com/dryvist/nix-hermes/issues/86)) ([5b8434a](https://github.com/dryvist/nix-hermes/commit/5b8434a109547ad4136414282f18dbeea9a21140))
+
 ## [0.15.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.15.0...nix-hermes-v0.15.1) (2026-09-05)
 
 
