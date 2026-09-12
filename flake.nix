@@ -72,15 +72,19 @@
     # their endpoint from the environment. Nothing in them assumes a Claude
     # session, which is what makes one authored copy serve both harnesses.
     #
-    # Repinned to 547c77e3, the squash commit of PR #459, which is where
-    # github-workflows/skills/github-code-search first exists. Verified before
-    # repinning that it names a permanent point on that repo's history line
-    # (compare 547c77e3...main reports status=identical) and that the SKILL.md
-    # is actually present at that exact rev — a squash can drop content, and
-    # only a re-probe proves it did not.
+    # Repinned to the openbao-v4.22.0 release tag (release-please's own
+    # commit for PR #503), which is where
+    # openbao/skills/openbao-secrets/SKILL.md first carries the `version`
+    # field data/shared-skills-allowlist.nix's entry for it requires. Verified
+    # before repinning that the field is actually present at that exact rev
+    # (`git show openbao-v4.22.0:openbao/skills/openbao-secrets/SKILL.md`).
+    # A tag is preferred over the bare PR merge commit (157f509e) once
+    # release-please cuts one, for the same reason this repo pins release
+    # tags for its Ansible consumer generally.
     #
-    # The previous pin, fe173de (PR #450's merge commit), predates the skill;
-    # a build against it fails validate-skills rather than shipping quietly.
+    # The previous pin, 547c77e3 (PR #459's squash commit), predates that
+    # field; a build against it fails validate-skills rather than shipping
+    # quietly.
     #
     # A green build still proves nothing about WHICH revision it built against
     # — that is precisely how a stale pin shipped a persona missing its
@@ -92,7 +96,7 @@
     # flake-explicit-rev Renovate manager in renovate.json is what proposes a
     # newer one; see the note there before removing either.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/547c77e3fa186f676afb798dee4a430c1912a4b7";
+      url = "github:dryvist/claude-code-plugins/openbao-v4.22.0";
       flake = false;
     };
 
