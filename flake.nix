@@ -94,9 +94,11 @@
     # An explicit rev makes this input immune to `nix flake update`: the
     # relock re-resolves the same sha every week, so nothing moves it. The
     # flake-explicit-rev Renovate manager in renovate.json is what proposes a
-    # newer one; see the note there before removing either.
+    # newer one; see the note there before removing either. A SHA, never a
+    # tag: that manager matches only a hex revision, so the earlier
+    # `openbao-v4.22.0` tag pin was invisible to it and frozen for good.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/openbao-v4.22.0";
+      url = "github:dryvist/claude-code-plugins/aed54b5e54a2ec8f4984c4b128eed98cf6381c41";
       flake = false;
     };
 

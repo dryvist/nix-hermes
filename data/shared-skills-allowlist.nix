@@ -37,16 +37,24 @@
 # ---------------------------------------------------------------------------
 # Review record
 #
-# AMENDMENT: delegate-to-router was removed from the entries below on the
-# claude-code-plugins repin to openbao-v4.22.0 — its source path
-# (ai-delegation/skills/delegate-to-router) no longer exists upstream,
-# replaced there by ai-delegation/skills/local-subagents (upstream commit
-# 4936fea, "replace delegate-to-router with local-subagents"). local-subagents
-# already carries the metadata.version an external vendor needs, but has not
-# been reviewed for this allowlist and is deliberately NOT added here — that
-# review, and the decision whether it is this skill's real replacement, is a
-# separate change. The review below for the ORIGINAL pair is left intact as
-# history; only openrouter-models is still an active entry.
+# AMENDMENT (2026-09-18): local-subagents and fast-subagent are now active
+# entries. local-subagents is delegate-to-router's replacement upstream
+# (commit 4936fea) and was reviewed for this allowlist against the same
+# criteria as the original pair: it holds no credential and says so; the
+# router endpoint and bearer arrive only from the environment, read at call
+# time and never exported; every call carries a timeout; no refusal (DNS,
+# 401/403, 429, unknown model, context overflow) authorizes a silent fallback
+# or a provider key; it names no model id and no host, choosing from the
+# router's own /model/info, so it cannot drift with the served inventory.
+# Its §8 describes the single-slot fast tier this agent's own fallback rung
+# shares, with the one rule that matters unattended: a 429 there means busy,
+# wait once or move on, never loop. fast-subagent is the one-command helper
+# for that tier (scripts/fast-subagent.sh: bash, curl, jq): same environment
+# discovery, one bounded request, one Retry-After wait, exits non-zero on
+# every refusal, and prints which rung answered. Reviewed line by line —
+# it writes nothing to disk but two mktemp files it removes, and the bearer
+# reaches only curl's argv. The review below for the ORIGINAL pair is left
+# intact as history.
 #
 # The two Dryvist marketplace entries described below were reviewed for an
 # unattended agent holding standing credentials.
@@ -125,6 +133,16 @@
 #     leak topology on its own.
 # ---------------------------------------------------------------------------
 [
+  {
+    input = "claude-code-plugins";
+    skill = "ai-delegation/skills/local-subagents";
+    target = "dryvist/local-subagents";
+  }
+  {
+    input = "claude-code-plugins";
+    skill = "ai-delegation/skills/fast-subagent";
+    target = "dryvist/fast-subagent";
+  }
   {
     input = "claude-code-plugins";
     skill = "ai-delegation/skills/openrouter-models";

@@ -57,17 +57,17 @@
     "claude-code-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1789250609,
-        "narHash": "sha256-MpnI6D5jw7hFmEX3ym5fPRCk8TzAyevyLyD4io3oVQ4=",
+        "lastModified": 1789768388,
+        "narHash": "sha256-m32YCtQ6svlaHjmo8C1RNP2PNVWpUQ3uIyZ+guqyWR8=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "e90905c34907bb62997c72db1a26dbcac790b77d",
+        "rev": "aed54b5e54a2ec8f4984c4b128eed98cf6381c41",
         "type": "github"
       },
       "original": {
         "owner": "dryvist",
-        "ref": "openbao-v4.22.0",
         "repo": "claude-code-plugins",
+        "rev": "aed54b5e54a2ec8f4984c4b128eed98cf6381c41",
         "type": "github"
       }
     },
