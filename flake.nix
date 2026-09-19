@@ -72,15 +72,19 @@
     # their endpoint from the environment. Nothing in them assumes a Claude
     # session, which is what makes one authored copy serve both harnesses.
     #
-    # Repinned to 547c77e3, the squash commit of PR #459, which is where
-    # github-workflows/skills/github-code-search first exists. Verified before
-    # repinning that it names a permanent point on that repo's history line
-    # (compare 547c77e3...main reports status=identical) and that the SKILL.md
-    # is actually present at that exact rev — a squash can drop content, and
-    # only a re-probe proves it did not.
+    # Repinned to the openbao-v4.22.0 release tag (release-please's own
+    # commit for PR #503), which is where
+    # openbao/skills/openbao-secrets/SKILL.md first carries the `version`
+    # field data/shared-skills-allowlist.nix's entry for it requires. Verified
+    # before repinning that the field is actually present at that exact rev
+    # (`git show openbao-v4.22.0:openbao/skills/openbao-secrets/SKILL.md`).
+    # A tag is preferred over the bare PR merge commit (157f509e) once
+    # release-please cuts one, for the same reason this repo pins release
+    # tags for its Ansible consumer generally.
     #
-    # The previous pin, fe173de (PR #450's merge commit), predates the skill;
-    # a build against it fails validate-skills rather than shipping quietly.
+    # The previous pin, 547c77e3 (PR #459's squash commit), predates that
+    # field; a build against it fails validate-skills rather than shipping
+    # quietly.
     #
     # A green build still proves nothing about WHICH revision it built against
     # — that is precisely how a stale pin shipped a persona missing its
@@ -90,9 +94,27 @@
     # An explicit rev makes this input immune to `nix flake update`: the
     # relock re-resolves the same sha every week, so nothing moves it. The
     # flake-explicit-rev Renovate manager in renovate.json is what proposes a
-    # newer one; see the note there before removing either.
+    # newer one; see the note there before removing either. A SHA, never a
+    # tag: that manager matches only a hex revision, so the earlier
+    # `openbao-v4.22.0` tag pin was invisible to it and frozen for good.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/547c77e3fa186f676afb798dee4a430c1912a4b7";
+      url = "github:dryvist/claude-code-plugins/aed54b5e54a2ec8f4984c4b128eed98cf6381c41";
+      flake = false;
+    };
+
+    # Owner of the shared agentsmd rules — the always-on behavioral contract
+    # every workstation harness already follows (Claude/Codex/Gemini via
+    # AGENTS.md/CLAUDE.md/GEMINI.md symlinks). Hermes runs unattended and
+    # today follows none of it; lib/bundle.nix appends the same four
+    # always-on files (per that repo's own `agentsmd/rules/rule-tiers.md`)
+    # to SOUL.md and ships the on-demand tier alongside it, so this agent
+    # reads the identical rule set from the identical single source.
+    #
+    # Pinned at develop's tip (670047a), same explicit-rev-immune-to-update
+    # pattern as claude-code-plugins above; bumped by the flake-explicit-rev
+    # Renovate manager.
+    ai-assistant-instructions = {
+      url = "github:dryvist/ai-assistant-instructions/670047a7aab834a557d664754c0303453d701d1e";
       flake = false;
     };
 
@@ -128,7 +150,12 @@
             agent:
             import ./lib/bundle.nix {
               inherit pkgs agent;
-              inherit (inputs) ai-llm-prompts browser-use claude-code-plugins;
+              inherit (inputs)
+                ai-llm-prompts
+                browser-use
+                claude-code-plugins
+                ai-assistant-instructions
+                ;
             };
 
           # Still named `bundle` because the skills check below consumes it, and

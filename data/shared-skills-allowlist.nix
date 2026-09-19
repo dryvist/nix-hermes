@@ -37,8 +37,27 @@
 # ---------------------------------------------------------------------------
 # Review record
 #
-# The two Dryvist marketplace entries below were reviewed for an unattended
-# agent holding standing credentials.
+# AMENDMENT (2026-09-18): local-subagents and fast-subagent are now active
+# entries. local-subagents is delegate-to-router's replacement upstream
+# (commit 4936fea) and was reviewed for this allowlist against the same
+# criteria as the original pair: it holds no credential and says so; the
+# router endpoint and bearer arrive only from the environment, read at call
+# time and never exported; every call carries a timeout; no refusal (DNS,
+# 401/403, 429, unknown model, context overflow) authorizes a silent fallback
+# or a provider key; it names no model id and no host, choosing from the
+# router's own /model/info, so it cannot drift with the served inventory.
+# Its §8 describes the single-slot fast tier this agent's own fallback rung
+# shares, with the one rule that matters unattended: a 429 there means busy,
+# wait once or move on, never loop. fast-subagent is the one-command helper
+# for that tier (scripts/fast-subagent.sh: bash, curl, jq): same environment
+# discovery, one bounded request, one Retry-After wait, exits non-zero on
+# every refusal, and prints which rung answered. Reviewed line by line —
+# it writes nothing to disk but two mktemp files it removes, and the bearer
+# reaches only curl's argv. The review below for the ORIGINAL pair is left
+# intact as history.
+#
+# The two Dryvist marketplace entries described below were reviewed for an
+# unattended agent holding standing credentials.
 # They are advisory: they describe how to choose and call a model the router
 # already serves this agent, and grant no capability it does not already have.
 # Specifically checked:
@@ -94,12 +113,35 @@
 # has terminal access, and the deployment verification proves only public
 # documentation retrieval. Any authenticated browsing remains an explicit
 # task-level decision under the existing Hermes credential policy.
+#
+# openbao-secrets was reviewed separately. It is instructional only — how to
+# pick a secret's store tier, prefer an engine-minted ephemeral credential
+# over a static one, and read through the pre-authorized ambient tier while
+# write/apply stays behind a human-gated wrapped secret_id. Specifically
+# checked:
+#
+#   - It grants no capability Hermes does not already have: reading a secret
+#     Hermes' own ambient AppRole is already entitled to was already possible
+#     without this skill; the skill only states the correct order of
+#     operations (mint over store, engine over KV) rather than opening a new
+#     door.
+#   - It never instructs storing, printing, or exporting a credential outside
+#     the one process that needs it, and explicitly names write/apply as
+#     human-gated — an unattended agent cannot self-authorize past that gate
+#     by reading this skill.
+#   - It embeds no host, credential, or model name, so it cannot drift or
+#     leak topology on its own.
 # ---------------------------------------------------------------------------
 [
   {
     input = "claude-code-plugins";
-    skill = "ai-delegation/skills/delegate-to-router";
-    target = "dryvist/delegate-to-router";
+    skill = "ai-delegation/skills/local-subagents";
+    target = "dryvist/local-subagents";
+  }
+  {
+    input = "claude-code-plugins";
+    skill = "ai-delegation/skills/fast-subagent";
+    target = "dryvist/fast-subagent";
   }
   {
     input = "claude-code-plugins";
@@ -114,6 +156,11 @@
     input = "claude-code-plugins";
     skill = "github-workflows/skills/github-code-search";
     target = "dryvist/github-code-search";
+  }
+  {
+    input = "claude-code-plugins";
+    skill = "openbao/skills/openbao-secrets";
+    target = "dryvist/openbao-secrets";
   }
   {
     # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
