@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.17.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.16.0...nix-hermes-v0.17.0) (2026-09-19)
+
+
+### Features
+
+* **bundle:** ship the agentsmd always-on rules into SOUL.md ([#92](https://github.com/dryvist/nix-hermes/issues/92)) ([78f7cf0](https://github.com/dryvist/nix-hermes/commit/78f7cf08445a803da21e8e63fe5f205e0bc0992d))
+* **skills:** allowlist openbao-secrets, drop dead delegate-to-router ([#93](https://github.com/dryvist/nix-hermes/issues/93)) ([495d78b](https://github.com/dryvist/nix-hermes/commit/495d78b0f925b1e641b350ade1d807c88dd75b4e))
+
 ## [0.16.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.15.1...nix-hermes-v0.16.0) (2026-09-12)
 
 
