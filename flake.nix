@@ -56,7 +56,7 @@
     #     when every shipped byte is the same — a path change here is expected
     #     and proves nothing on its own, in either direction.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/d8caf8ca3dc4ef224a160fd6b6a2fd3b93ee01fd";
+      url = "github:dryvist/ai-llm-prompts/e4812df34b7059e638916b2d3aecaf1bce1181bc";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
