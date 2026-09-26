@@ -98,7 +98,7 @@
     # tag: that manager matches only a hex revision, so the earlier
     # `openbao-v4.22.0` tag pin was invisible to it and frozen for good.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/aed54b5e54a2ec8f4984c4b128eed98cf6381c41";
+      url = "github:dryvist/claude-code-plugins/2ea9d656172ac1f2d8e2add891b7410493d5576e";
       flake = false;
     };
 
