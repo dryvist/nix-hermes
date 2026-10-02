@@ -20,43 +20,16 @@
     # Immutable source of truth for the shared autonomous base and Hermes
     # surface prompts. Repo-local skills stay owned by this repository.
     #
-    # MERGE ORDER (load-bearing in both directions, do not reorder):
-    #   1. ai-llm-prompts       PR #26  -> its main  [DONE, pinned below]
-    #   2. claude-code-plugins  PR #450 -> its main (trunk-flow repo)
-    #   3. repin claude-code-plugins here to that merged revision
-    #   4. this PR lands
-    # checks/validate-skills.nix asserts content that only exists at or after
-    # step 1, so landing this first fails the build rather than shipping
-    # quietly. That is the gate working, not a coupling to route around.
+    # Tracks the default branch. checks/validate-skills.nix asserts the SOUL
+    # content this input must carry (shared base, Hermes surface, delegation
+    # doctrine), so a relock to a revision that drops any of it fails the
+    # build rather than shipping quietly.
     #
-    # Pinned at main's tip: 18e70c0 is the release commit sitting on c9bf665,
-    # the squash of PR #26. The branch revision this input carried until now
-    # (d7a4a20) is NOT an ancestor of main — a squash merge rewrites the commit,
-    # so the pre-merge sha survives only as long as the branch does and names
-    # nothing on the repo's history line once it is deleted. Verified before
-    # repinning that all three sentinel strings survive the squash; a squash can
-    # silently drop content, and only a re-probe proves it did not.
-    #
-    # No older pin is a safe fallback, and the two nearest are unsafe for
-    # OPPOSITE reasons — do not "roll back" to either without reading both:
-    #   7b427bbf (pre-doctrine) carries the honest self-enforced spend figure
-    #     but none of the delegation doctrine.
-    #   f087d04  carries the doctrine but DELETED that figure, on the since-
-    #     disproven premise that the router enforced the cap. It does not, so
-    #     that revision leaves an unattended agent with no spend control at all
-    #     while telling it one is in force. The sentinel rejects it by design.
-    #   d8caf8c  adds auto-ai-agent/donna.md, the second agent's surface. It
-    #     leaves autonomous-base.md and hermes.md byte-identical to ed8e4b4, so
-    #     this bump does not change what hermes-bundle SHIPS. Verified by
-    #     rebuilding at both pins and diffing the outputs: `diff -r` reports no
-    #     difference and SOUL.md hashes to c4b725cd either way.
-    #
-    #     Compare CONTENT, not the store path. These derivations are
-    #     input-addressed, so bumping this rev moves hermes-bundle's path even
-    #     when every shipped byte is the same — a path change here is expected
-    #     and proves nothing on its own, in either direction.
+    # Compare CONTENT, not the store path. These derivations are
+    # input-addressed, so a relock moves hermes-bundle's path even when every
+    # shipped byte is the same — a path change proves nothing on its own.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts/d8caf8ca3dc4ef224a160fd6b6a2fd3b93ee01fd";
+      url = "github:dryvist/ai-llm-prompts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -72,33 +45,12 @@
     # their endpoint from the environment. Nothing in them assumes a Claude
     # session, which is what makes one authored copy serve both harnesses.
     #
-    # Repinned to the openbao-v4.22.0 release tag (release-please's own
-    # commit for PR #503), which is where
-    # openbao/skills/openbao-secrets/SKILL.md first carries the `version`
-    # field data/shared-skills-allowlist.nix's entry for it requires. Verified
-    # before repinning that the field is actually present at that exact rev
-    # (`git show openbao-v4.22.0:openbao/skills/openbao-secrets/SKILL.md`).
-    # A tag is preferred over the bare PR merge commit (157f509e) once
-    # release-please cuts one, for the same reason this repo pins release
-    # tags for its Ansible consumer generally.
-    #
-    # The previous pin, 547c77e3 (PR #459's squash commit), predates that
-    # field; a build against it fails validate-skills rather than shipping
-    # quietly.
-    #
-    # A green build still proves nothing about WHICH revision it built against
-    # — that is precisely how a stale pin shipped a persona missing its
-    # doctrine earlier in this branch, which is why validate-skills asserts
-    # content, not just shape.
-    #
-    # An explicit rev makes this input immune to `nix flake update`: the
-    # relock re-resolves the same sha every week, so nothing moves it. The
-    # flake-explicit-rev Renovate manager in renovate.json is what proposes a
-    # newer one; see the note there before removing either. A SHA, never a
-    # tag: that manager matches only a hex revision, so the earlier
-    # `openbao-v4.22.0` tag pin was invisible to it and frozen for good.
+    # Tracks the default branch. checks/validate-skills.nix asserts that every
+    # skill in data/shared-skills-allowlist.nix arrives with the frontmatter
+    # the loader needs (`version` included), so a relock to a revision that
+    # lacks it fails the build rather than shipping quietly.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins/aed54b5e54a2ec8f4984c4b128eed98cf6381c41";
+      url = "github:dryvist/claude-code-plugins";
       flake = false;
     };
 
@@ -110,11 +62,9 @@
     # to SOUL.md and ships the on-demand tier alongside it, so this agent
     # reads the identical rule set from the identical single source.
     #
-    # Pinned at develop's tip (670047a), same explicit-rev-immune-to-update
-    # pattern as claude-code-plugins above; bumped by the flake-explicit-rev
-    # Renovate manager.
+    # Tracks the default branch (develop).
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/670047a7aab834a557d664754c0303453d701d1e";
+      url = "github:dryvist/ai-assistant-instructions";
       flake = false;
     };
 
@@ -198,8 +148,8 @@
             # the derivation's builder (lib/bundle.nix), so a package that is
             # never built asserts nothing while still showing a green check.
             # A stale or renamed ai-llm-prompts fragment would ship silently,
-            # which is the exact failure mode the pin comments above exist to
-            # prevent for Hermes.
+            # which is the exact failure mode validate-skills prevents for
+            # Hermes.
             #
             # hermes-bundle needs no equivalent line only because
             # validate-skills takes it as an input, and that dependency is what

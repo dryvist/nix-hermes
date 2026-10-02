@@ -13,9 +13,7 @@ permissions:
 jobs:
   # flake.nix and flake.lock must agree, and `nix flake check` does not assert
   # that — see .github/scripts/check-lock-consistency.sh for what it does
-  # instead. Needed because the flake-explicit-rev Renovate manager
-  # (renovate.json) proposes revision bumps in flake.nix, each of which needs a
-  # matching lock refresh.
+  # instead.
   lock-consistency:
     name: Lock Consistency
     runs-on: ubuntu-latest
