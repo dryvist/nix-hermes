@@ -93,7 +93,7 @@ Exceeded if `changed_files > PR_REVIEW_MAX_DIFF_FILES` or
 
 ```sh
 gh api repos/$O/$R/pulls/$N/reviews --paginate \
-  --jq '.[] | select(.user.login == (env.HERMES_GITHUB_APP_SLUG + "[bot]")) | {id, body, commit_id}'
+  --jq '.[] | select(.user.login == (env.HERMES_GITHUB_APP_SLUG + "[bot]")) | {id, state, body, commit_id}'
 ```
 
 If any review's `body` starts with `<!-- hermes-review sha=$SHA -->`, you
