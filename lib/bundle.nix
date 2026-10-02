@@ -4,9 +4,9 @@
 #   result/SOUL.md                      persona + always-on behavioral rules
 #   result/rules/on-demand/...          rule tier read by path, not delivered
 #
-# SOUL.md is composed fresh from the pinned ai-llm-prompts catalog's
+# SOUL.md is composed fresh from the locked ai-llm-prompts catalog's
 # autonomous-base.md and the named agent's surface, followed by the four
-# always-on agentsmd rules from the pinned ai-assistant-instructions input
+# always-on agentsmd rules from the locked ai-assistant-instructions input
 # (AGENTS.md, soul.md, operating-core.md, public-disclosure.md — the same set
 # every Nix-managed workstation harness already loads every session). OKF
 # frontmatter is stripped before delivery; prompt/rule ownership never drifts
@@ -113,8 +113,8 @@ pkgs.runCommand "${agent}-bundle" { } ''
   # One sentinel per always-on rule — proves each body actually arrived and
   # was not truncated by a frontmatter-stripping regression, the same
   # protection the persona sentinels above give the catalog bodies.
-  grep -qF 'YOU ARE the autonomous orchestrator' $out/SOUL.md
-  grep -qF 'You are an autonomous orchestrator. You own a task through completion' $out/SOUL.md
-  grep -qF 'Loaded every session. It holds only what changes behavior on every task' $out/SOUL.md
-  grep -qF 'Everything in a public, git-committed artifact is published forever' $out/SOUL.md
+  grep -qF 'Ship the simplest surgical fix matching existing style' $out/SOUL.md
+  grep -qF 'an autonomous orchestrator, owning a task through completion' $out/SOUL.md
+  grep -qF 'Behavior that applies to every task' $out/SOUL.md
+  grep -qF 'A public, git-committed artifact' $out/SOUL.md
 ''

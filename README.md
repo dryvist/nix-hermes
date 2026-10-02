@@ -44,7 +44,7 @@ is recorded in that file. The official Browser Use CLI skill is delivered at
 remain under `skills/dryvist/`.
 
 It currently carries `delegate-to-router` and `openrouter-models`, authored in
-the `ai-delegation` plugin of the `claude-code-plugins` marketplace and pinned
+the `ai-delegation` plugin of the `claude-code-plugins` marketplace and locked
 as a non-flake input. Those two are shared rather than copied because their
 behavior has to be identical here and on the workstation CLIs — they govern
 spend and egress, and two copies would drift on exactly those rules while the
