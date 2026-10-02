@@ -177,14 +177,14 @@ _MDLINT_RE = re.compile(r"^(.+?):(\d+)(?::\d+)?\s+(MD\d+.*)$")
 def detect_markdownlint(repo: Path, cfg: dict) -> list[dict]:
     binname = cfg.get("binary", "markdownlint-cli2")
     if shutil.which(binname) is None:
-        return []  # tool unavailable in this environment; not itself a finding
+        raise SystemExit(f"{binname} not found on PATH; check cannot run")
     globs = cfg.get("globs", ["**/*.md"])
     try:
         out = subprocess.run(
             [binname, *globs, "--no-progress"], cwd=repo, capture_output=True, text=True, timeout=120
         )
-    except (OSError, subprocess.SubprocessError):
-        return []
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SystemExit(f"{binname} failed to run: {exc}") from exc
     findings = []
     for line in (out.stdout + out.stderr).splitlines():
         m = _MDLINT_RE.match(line.strip())

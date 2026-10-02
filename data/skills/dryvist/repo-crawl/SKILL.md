@@ -29,7 +29,7 @@ cron invoking this skill should see silence on every ordinary run.
 and it is a different token from the one `dryvist/pr-review` uses. Read it
 from the environment; never print it.
 
-`HERMES_BOT_SLUG` — this bot's App slug (e.g. `jacobs-hermes-agent`, without
+`HERMES_GITHUB_APP_SLUG` — this bot's App slug (e.g. `jacobs-hermes-agent`, without
 `[bot]`), used for the PR-cap searches below. Required; stop and report if
 unset rather than guessing it.
 
@@ -61,7 +61,7 @@ Repo allowlist starts narrow and widens only as PRs prove clean: begin with
 ### 1. Caps — check BEFORE doing any work
 
 ```sh
-gh search prs --owner dryvist --app "$HERMES_BOT_SLUG" --state open --json repository,number
+gh search prs --owner dryvist --app "$HERMES_GITHUB_APP_SLUG" --state open --json repository,number
 ```
 
 - **Max 3 open Hermes-authored PRs org-wide.** If already at 3, stop. Print

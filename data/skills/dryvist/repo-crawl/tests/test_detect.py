@@ -9,14 +9,20 @@ Run: python3 -m unittest discover -s . -p 'test_*.py'
 """
 from __future__ import annotations
 
+import importlib.util
 import json
-import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-import detect  # noqa: E402
+_SPEC = importlib.util.spec_from_file_location(
+    "detect", Path(__file__).resolve().parent.parent / "scripts" / "detect.py"
+)
+if _SPEC is None or _SPEC.loader is None:
+    raise ImportError("cannot load scripts/detect.py")
+detect = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(detect)
 
 
 def write(root: Path, rel: str, content: str) -> Path:
@@ -196,6 +202,13 @@ class TestStaleArtifacts(DetectorTestCase):
     def test_fresh_file_is_clean(self):
         write(self.repo, "fresh.bak", "new\n")
         self.assertEqual(detect.detect_stale_artifacts(self.repo, self.cfg), [])
+
+
+class TestMarkdownlint(DetectorTestCase):
+    def test_missing_binary_fails_loudly(self) -> None:
+        with mock.patch.object(detect.shutil, "which", return_value=None):
+            with self.assertRaises(SystemExit):
+                detect.detect_markdownlint(self.repo, {"binary": "markdownlint-cli2"})
 
 
 class TestRunAndChecklist(DetectorTestCase):

@@ -35,9 +35,10 @@ The environment carries:
   `pull_requests:write`, `issues:write`, `contents:READ`, `checks:read`. It
   cannot push, merge, or write contents — treat that as a hard boundary, not
   an oversight to work around.
-- `HERMES_BOT_LOGIN` — this bot's own GitHub login (e.g. `name[bot]`), used
-  to detect self-authored PRs and your own prior reviews. Required; if unset,
-  stop and report the gap rather than guessing a login.
+- `HERMES_GITHUB_APP_SLUG` — this bot's App slug (no `[bot]` suffix). Your own
+  GitHub login is `${HERMES_GITHUB_APP_SLUG}[bot]`; use it to detect
+  self-authored PRs and your own prior reviews. Required; if unset, stop and
+  report the gap rather than guessing a login.
 
 Optional, with built-in defaults so the skill works if these are unset:
 `PR_REVIEW_MAX_DIFF_LINES` (default 2000) and `PR_REVIEW_MAX_DIFF_FILES`
@@ -75,7 +76,7 @@ Fetch the PR once: `gh api repos/$O/$R/pulls/$N`.
 | Condition | Action |
 | --- | --- |
 | `.head.repo.full_name != "$O/$R"`, or `.head.repo` is `null` (fork, possibly deleted) | Print `skip: fork PR` and stop. Post nothing. |
-| `.user.login == "$HERMES_BOT_LOGIN"` | Print `skip: self-authored` and stop. Post nothing. |
+| `.user.login == "${HERMES_GITHUB_APP_SLUG}[bot]"` | Print `skip: self-authored` and stop. Post nothing. |
 | `.draft == true` | Print `skip: draft PR` and stop. Post nothing. |
 | diff exceeds the cap (see below) | Post **one** `COMMENT` review noting the cap (step 5 still applies: marker + dedupe), then stop — do not analyze the diff. |
 
@@ -92,7 +93,7 @@ Exceeded if `changed_files > PR_REVIEW_MAX_DIFF_FILES` or
 
 ```sh
 gh api repos/$O/$R/pulls/$N/reviews --paginate \
-  --jq '.[] | select(.user.login == env.HERMES_BOT_LOGIN) | {id, body, commit_id}'
+  --jq '.[] | select(.user.login == (env.HERMES_GITHUB_APP_SLUG + "[bot]")) | {id, body, commit_id}'
 ```
 
 If any review's `body` starts with `<!-- hermes-review sha=$SHA -->`, you
@@ -164,7 +165,7 @@ verbatim.
 
 ### 6. Dismiss a superseded prior review
 
-If an earlier review from `HERMES_BOT_LOGIN` on this PR was
+If an earlier review from `${HERMES_GITHUB_APP_SLUG}[bot]` on this PR was
 `CHANGES_REQUESTED` and this run's analysis no longer finds that blocking
 class present, dismiss it before posting the new review:
 
