@@ -53,6 +53,16 @@ else
   fail=1
 fi
 
+for skill in "$pr_review" "$repo_crawl/SKILL.md"; do
+  [ -f "$skill" ] || continue
+  for sentinel in "## Trust boundary and public-write DON'Ts" 'HERMES_TRUST_BOUNDARY' 'skip: would'; do
+    grep -qF "$sentinel" "$skill" || {
+      echo "$skill missing trust-boundary sentinel: $sentinel"
+      fail=1
+    }
+  done
+done
+
 checklist="$repo_crawl/checklist.json"
 if [ -f "$checklist" ]; then
   jq -e '.forbidden_paths_default | type == "array"' "$checklist" >/dev/null ||
