@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.17.0...nix-hermes-v0.17.1) (2026-10-02)
+
+
+### Bug Fixes
+
+* **flake:** track branches for owned inputs ([#113](https://github.com/dryvist/nix-hermes/issues/113)) ([2f453d1](https://github.com/dryvist/nix-hermes/commit/2f453d161bf10374ebd25c869e75d18e15cea31e))
+
 ## [0.17.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.16.0...nix-hermes-v0.17.0) (2026-09-19)
 
 
