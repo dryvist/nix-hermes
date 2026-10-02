@@ -114,7 +114,7 @@
     # pattern as claude-code-plugins above; bumped by the flake-explicit-rev
     # Renovate manager.
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions/670047a7aab834a557d664754c0303453d701d1e";
+      url = "github:dryvist/ai-assistant-instructions/6e94ce9388cd172c1b864f4ef0f17d30654ea5d8";
       flake = false;
     };
 
