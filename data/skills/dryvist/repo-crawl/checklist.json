@@ -1,0 +1,172 @@
+{
+  "forbidden_paths_default": [
+    ".github/workflows/**",
+    "**/*.lock",
+    "flake.lock",
+    "**/rulesets/**",
+    "**/secrets/**",
+    "**/.worktrees/**"
+  ],
+  "checks": [
+    {
+      "id": "D1",
+      "title": "ops docs cron schedule drifted from the role defaults it documents",
+      "repos": ["ansible-proxmox-ai"],
+      "detect": "cron_drift",
+      "config": {
+        "docs_file": "docs/hermes-ops/cron-fleet.md",
+        "defaults_file": "roles/hermes_agent/defaults/main.yml"
+      },
+      "fix_rule": "Edit only the docs table's schedule cell for the named cron to match the role default. Never edit the role defaults file from this check.",
+      "max_diff": { "files": 1, "lines": 20 },
+      "forbidden_paths": [],
+      "pr_title": "docs(cron-fleet): fix schedule drift for {name} [routine:hermes]",
+      "pr_body": "Updates the documented schedule for `{name}` in `{path}` to match the role default. Found by repo-crawl check D1.\n"
+    },
+    {
+      "id": "D2",
+      "title": "markdown page missing a required frontmatter key",
+      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "detect": "frontmatter_missing",
+      "config": {
+        "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md"],
+        "required_keys": ["title", "description"]
+      },
+      "fix_rule": "Add only the missing key(s) to the existing frontmatter block, with a value drawn from the page's own first heading or body. Never touch the page body, and never invent a fact not already on the page.",
+      "max_diff": { "files": 1, "lines": 5 },
+      "forbidden_paths": [],
+      "pr_title": "docs: add missing frontmatter to {path} [routine:hermes]",
+      "pr_body": "Adds the frontmatter key(s) this page was missing. Found by repo-crawl check D2.\n"
+    },
+    {
+      "id": "D3",
+      "title": "broken relative markdown link",
+      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "detect": "broken_links",
+      "config": {
+        "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md", "**/*.md"]
+      },
+      "fix_rule": "Fix only the one broken link target on the reported line (correct path, or remove the link if the target page was deleted). Never touch surrounding prose.",
+      "max_diff": { "files": 1, "lines": 2 },
+      "forbidden_paths": [],
+      "pr_title": "docs: fix broken link in {path} [routine:hermes]",
+      "pr_body": "Fixes a broken relative link at `{path}:{line}`. Found by repo-crawl check D3.\n"
+    },
+    {
+      "id": "D4",
+      "title": "placeholder or TODO/FIXME text left in shipped docs",
+      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "detect": "placeholder_text",
+      "config": {
+        "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md"],
+        "tokens": ["TODO", "FIXME", "PLACEHOLDER", "TBD"]
+      },
+      "fix_rule": "Resolve the single flagged placeholder with real content sourced from the repo, or delete the line if it no longer applies. Never leave a new placeholder in its place.",
+      "max_diff": { "files": 1, "lines": 5 },
+      "forbidden_paths": [],
+      "pr_title": "docs: resolve placeholder text in {path} [routine:hermes]",
+      "pr_body": "Resolves a placeholder/TODO left in shipped docs at `{path}:{line}`. Found by repo-crawl check D4.\n"
+    },
+    {
+      "id": "D5",
+      "title": "doc claims a fact token that no longer exists in the code tree",
+      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "detect": "stale_fact_token",
+      "config": {
+        "tokens": [
+          {
+            "token": "GH_PAT_WRITE_PROJECT_ISSUES",
+            "doc_glob": "src/content/docs/**/*.md",
+            "code_glob": "**/*.yml"
+          }
+        ]
+      },
+      "fix_rule": "Remove or correct only the sentence naming the stale token; never restate the token's replacement from memory, only from a value actually found elsewhere in the repo.",
+      "max_diff": { "files": 1, "lines": 3 },
+      "forbidden_paths": [],
+      "pr_title": "docs: correct stale reference in {path} [routine:hermes]",
+      "pr_body": "Removes a doc claim about a token/name no longer present in the code tree, at `{path}:{line}`. Found by repo-crawl check D5.\n"
+    },
+    {
+      "id": "D6",
+      "title": "markdownlint finding",
+      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "detect": "markdownlint",
+      "config": {
+        "binary": "markdownlint-cli2",
+        "globs": ["**/*.md", "**/*.mdx"]
+      },
+      "fix_rule": "Fix the reported rule violation for real in the offending line(s). Never add a markdownlint-disable comment, never loosen .markdownlint config, never widen an ignore glob.",
+      "max_diff": { "files": 1, "lines": 10 },
+      "forbidden_paths": [".markdownlint*", ".markdownlintignore"],
+      "pr_title": "docs: fix markdownlint finding in {path} [routine:hermes]",
+      "pr_body": "Fixes a markdownlint finding at `{path}:{line}` in place. Found by repo-crawl check D6.\n"
+    },
+    {
+      "id": "S1",
+      "title": "skill frontmatter missing a required key",
+      "repos": ["nix-hermes"],
+      "detect": "skill_frontmatter",
+      "config": {
+        "glob": "data/skills/**/SKILL.md",
+        "required_keys": ["name", "description", "version"]
+      },
+      "fix_rule": "Add only the missing frontmatter key(s). Never alter the skill's body or any other frontmatter field.",
+      "max_diff": { "files": 1, "lines": 3 },
+      "forbidden_paths": [],
+      "pr_title": "fix(skills): add missing frontmatter to {path} [routine:hermes]",
+      "pr_body": "Adds the frontmatter key(s) this skill was missing. Found by repo-crawl check S1.\n"
+    },
+    {
+      "id": "S2",
+      "title": "shared-skill allowlist entry has no review record",
+      "repos": ["nix-hermes"],
+      "detect": "allowlist_review",
+      "config": {
+        "allowlist_file": "data/shared-skills-allowlist.nix"
+      },
+      "fix_rule": "Report only. A missing review record is a human safety-review gap this check cannot fill in — never author a review record on a human's behalf.",
+      "max_diff": { "files": 0, "lines": 0 },
+      "forbidden_paths": [],
+      "pr_title": null,
+      "pr_body": null
+    },
+    {
+      "id": "P1",
+      "title": "persona text and skill text contradict each other",
+      "repos": ["nix-hermes"],
+      "detect": "contradiction",
+      "config": {
+        "rules": [
+          {
+            "file_a": "data/skills/dryvist/docs-pr/SKILL.md",
+            "pattern_a": "already in your environment",
+            "file_b": "data/skills/dryvist/docs-pr/SKILL.md",
+            "pattern_b": "mint",
+            "message": "docs-pr claims GH_TOKEN is pre-provisioned while also describing how to mint one"
+          }
+        ]
+      },
+      "fix_rule": "Report only. A persona/skill contradiction needs a human or a dedicated authoring change, not an automated one-file patch.",
+      "max_diff": { "files": 0, "lines": 0 },
+      "forbidden_paths": [],
+      "pr_title": null,
+      "pr_body": null
+    },
+    {
+      "id": "C1",
+      "title": "stale .worktrees or .bak artifact",
+      "repos": ["nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps", "docs-starlight"],
+      "detect": "stale_artifacts",
+      "config": {
+        "globs": ["**/.worktrees/*", "**/*.bak"],
+        "max_age_days": 30
+      },
+      "fix_rule": "Report only. Deleting a worktree can discard unpushed work; this check flags for a human to confirm before removal.",
+      "max_diff": { "files": 0, "lines": 0 },
+      "forbidden_paths": [],
+      "pr_title": null,
+      "pr_body": null
+    }
+  ]
+}
