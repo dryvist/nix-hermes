@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.17.1...nix-hermes-v0.18.0) (2026-10-03)
+
+
+### Features
+
+* **skills:** PR-review and repo-crawl skills for the Hermes PR agent ([#120](https://github.com/dryvist/nix-hermes/issues/120)) ([ebe25a2](https://github.com/dryvist/nix-hermes/commit/ebe25a2e7e9a7adf530adc0a42ffece04e057869))
+
 ## [0.17.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.17.0...nix-hermes-v0.17.1) (2026-10-02)
 
 
