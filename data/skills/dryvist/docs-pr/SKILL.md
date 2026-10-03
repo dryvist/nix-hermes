@@ -1,7 +1,7 @@
 ---
 name: dryvist-docs-pr
 description: Open signed, draft, no-merge doc PRs to the private dryvist docs site
-version: 1.1.0
+version: 1.1.1
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -34,9 +34,11 @@ to end.
    `createCommitOnBranch` GraphQL mutation, which signs server-side under the
    App identity. NEVER `git commit`/`git push` — the org requires signed commits
    and a plain push is rejected.
-3. **Private site only.** Everything you author here targets `docs-starlight`.
-   Never open a PR against the public docs repo, and redact secrets from every
-   string before it leaves the machine.
+3. **The one rule on public vs. private:** committed docs content for the
+   private docs site goes to `dryvist/docs-starlight` only, never to the
+   public `dryvist/docs` site. Everything you author here targets
+   `docs-starlight`. Never open a PR against the public docs repo, and
+   redact secrets from every string before it leaves the machine.
 4. **No emoji** anywhere in branch names, titles, commit messages, or bodies.
 5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, label
    `cloud-routine`, and a `## Provenance` block in the body naming the source(s).
@@ -50,9 +52,10 @@ to end.
 
 ## Credential
 
-`GH_TOKEN` is an App installation token, already in your environment. You do not
-mint it and you do not print it. If `gh auth status` reports no token, stop
-(rule 8).
+`GH_TOKEN` is a GitHub App installation token. The platform supplies it in
+this run's environment — this skill never mints, derives, or refreshes it,
+and never prints it. If `gh auth status` reports no token, stop (rule 8) —
+do not fall back to any other credential.
 
 ## Procedure
 
