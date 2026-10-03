@@ -137,6 +137,10 @@
               inherit pkgs bundle;
             };
 
+            validate-new-skills = import ./checks/validate-new-skills.nix {
+              inherit pkgs bundle;
+            };
+
             # Listed as a CHECK, not merely a package, because `nix flake
             # check` EVALUATES packages without building them — it prints
             # "build skipped" and passes. Confirmed against a probe flake whose
