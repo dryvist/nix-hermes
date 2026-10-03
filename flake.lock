@@ -55,11 +55,11 @@
     "claude-code-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1790899125,
-        "narHash": "sha256-D85n8WhO3JBHCc4+TQHkTwlWg5pX7XY4sJeNRmSHr7M=",
+        "lastModified": 1791048294,
+        "narHash": "sha256-tdmHgDb/+WIw+yryXpWqImEklyS5XEpE08nLD/MloSY=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "67c6d2d852a39b1fdb46dbba0bfd72dc692285c7",
+        "rev": "a4cfb343429a1986a9b1e62322a8502dc21b1f75",
         "type": "github"
       },
       "original": {
