@@ -163,6 +163,11 @@
     target = "dryvist/openbao-secrets";
   }
   {
+    input = "claude-code-plugins";
+    skill = "homelab-ops/skills/monitoring-first";
+    target = "dryvist/monitoring-first";
+  }
+  {
     # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
     # so it intentionally lives outside dryvist/ and is copied verbatim.
     input = "browser-use";

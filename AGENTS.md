@@ -14,7 +14,7 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 | Path                               | Role                                                                         |
 | ---------------------------------- | ---------------------------------------------------------------------------- |
 | `data/skills/dryvist/<skill>/`     | Hermes-specific skills (SKILL.md + scripts + tests)                          |
-| `data/shared-skills-allowlist.nix` | Opt-in gate for workstation skills, one reviewed entry each (2 today)        |
+| `data/shared-skills-allowlist.nix` | Opt-in gate for reviewed workstation skills, one entry each                  |
 | `lib/bundle.nix`                   | Composes SOUL from the locked `ai-llm-prompts` base and Hermes prompt bodies |
 | `checks/validate-skills.nix`       | Frontmatter + SOUL sentinel contract check                                   |
 
