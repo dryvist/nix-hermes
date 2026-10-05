@@ -40,10 +40,8 @@
     # skill may not live there. Consumed only through
     # data/shared-skills-allowlist.nix, never wholesale. Not a flake.
     #
-    # The marketplace layout is Claude Code's, but the two skills taken from it
-    # are not: they use only shell, curl, and jq, name no model id, and read
-    # their endpoint from the environment. Nothing in them assumes a Claude
-    # session, which is what makes one authored copy serve both harnesses.
+    # The marketplace layout is Claude Code's, but each allowlisted skill is
+    # reviewed for cross-harness use and copied unchanged into this bundle.
     #
     # Tracks the default branch. checks/validate-skills.nix asserts that every
     # skill in data/shared-skills-allowlist.nix arrives with the frontmatter

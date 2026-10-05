@@ -40,6 +40,12 @@ pkgs.runCommand "validate-skills" { } ''
 
   ${assertShared}
 
+  [ -f "${bundle}/skills/dryvist/monitoring-first/SKILL.md" ] \
+    || { echo "monitoring-first skill is missing from the Hermes bundle"; fail=1; }
+  monitoring_rule='Check system state with monitoring first; follow the `monitoring-first` skill before direct shell probes.'
+  [ "$(grep -F -o "$monitoring_rule" ${bundle}/SOUL.md | wc -l | tr -d ' ')" -eq 1 ] \
+    || { echo "SOUL.md must contain the monitoring-first rule exactly once"; fail=1; }
+
   # A skill naming a helper script the bundle does not ship leaves the agent
   # following instructions it cannot run — silently, since nothing else here
   # reads a SKILL.md body. General on purpose: the failure class is "the prose
