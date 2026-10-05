@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.18.0...nix-hermes-v0.19.0) (2026-10-05)
+
+
+### Features
+
+* **hermes:** bundle monitoring-first skill ([#135](https://github.com/dryvist/nix-hermes/issues/135)) ([b13c5ba](https://github.com/dryvist/nix-hermes/commit/b13c5ba9e651c2d1bd9bbfad33fb629604d66b34))
+
 ## [0.18.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.17.1...nix-hermes-v0.18.0) (2026-10-03)
 
 
