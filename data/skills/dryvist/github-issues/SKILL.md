@@ -15,7 +15,7 @@ metadata:
 # dryvist github-issues
 
 Read and update GitHub **Issues** with the `gh` on `PATH`. That `gh` is the
-Hermes wrapper: it picks a short-lived installation token per call, enforces
+agent's minted-token wrapper: it picks a short-lived installation token per call, enforces
 the public/private repository boundary, and gates writes to public repositories.
 Do not call GitHub with `curl`, and do not pass an authorization header.
 
@@ -108,5 +108,5 @@ around the refusal.
 4. **Label appropriately** so triage and project automation can route the item.
 5. **Never leak credentials.** Never paste a token, a token file path, or a
    secret into an issue body, comment, PR text, or log output.
-6. **Issues only.** Code changes go through the `dryvist/docs-pr` signed-commit
-   path. Merges, approvals, and admin actions are human-only.
+6. **Issues only.** Code changes go through the documentation pull-request
+   skill's signed-commit path. Merges, approvals, and admin actions are human-only.
