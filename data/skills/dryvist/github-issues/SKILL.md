@@ -1,149 +1,112 @@
 ---
 name: dryvist-github-issues
-description: Triage, create and update GitHub Issues (all repos) and manage dryvist org Projects v2
-version: 1.0.0
+description: Read, triage, create and update GitHub Issues across dryvist repos through the minted gh wrapper
+version: 1.1.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
 metadata:
   hermes:
     category: research
-    tags: [github, issues, projects, dryvist]
+    tags: [github, issues, dryvist]
     related_skills: [dryvist/docs-pr, github/github-pr-workflow]
 ---
 
 # dryvist github-issues
 
-Manage GitHub **Issues** and **Projects (v2)** using the fine-grained PAT
-`GH_PAT_WRITE_PROJECT_ISSUES`, delivered into this agent's environment (`.env`).
+Read and update GitHub **Issues** with the `gh` on `PATH`. That `gh` is the
+Hermes wrapper: it picks a short-lived installation token per call, enforces
+the public/private repository boundary, and gates writes to public repositories.
+Do not call GitHub with `curl`, and do not pass an authorization header.
 
-## Purpose
+## Choosing the token set
 
-`GH_PAT_WRITE_PROJECT_ISSUES` grants:
+Every call sets two variables:
 
-- **read + write GitHub Issues across ALL repos** — read, search, create,
-  comment on, update, label and close issues, and
-- **read + write Projects (v2) in the `dryvist` org** — read boards and add /
-  move items on them,
+- `HERMES_TRUST_BOUNDARY=public` or `private`: the visibility of the target
+  repository. The wrapper refuses a repository on the other side, and it
+  refuses a call with no readable target when it would write.
+- `HERMES_GH_TOKEN_SET`:
+  - `review` (the default when unset): read-only. Use it for every read.
+  - `author`: write. Set it on every mutation (create, comment, label, update,
+    close) and on nothing else.
 
-plus a few incidental read scopes. Use it for issue triage and org project-board
-management.
+Read-only work (triage reports, analysis, maintenance review) uses `review` for
+every call. Never switch to `author` to get around a refusal. A refusal names
+its gate; report it and stop.
 
-**It is NOT for:**
+## Issues
 
-- **code commits** — signed commits go through the separate `dryvist/docs-pr`
-  skill (GitHub App + `createCommitOnBranch`). This token cannot and must not
-  push code.
-- **merging** — you have no authority to merge, mark ready, or approve anything.
-
-Respect least privilege: this token is scoped to issues + projects only. Do not
-attempt to use it for pushes, PR merges, or any admin action.
-
-## How to use
-
-Call the GitHub **REST API** for issues and the **GraphQL API** for Projects v2,
-authenticating with `Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES`. Read
-the token from the environment at use time — never hardcode it.
-
-### Issues (REST)
-
-Get one issue:
+Read one issue:
 
 ```bash
-curl -sS -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/{owner}/{repo}/issues/{n}
+HERMES_TRUST_BOUNDARY=private gh api "repos/$OWNER/$REPO/issues/$NUMBER"
 ```
 
-List issues (include closed):
+List open issues (newest first):
 
 ```bash
-curl -sS -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  "https://api.github.com/repos/{owner}/{repo}/issues?state=all&per_page=50"
+HERMES_TRUST_BOUNDARY=public gh api "repos/$OWNER/$REPO/issues?state=open&per_page=50"
 ```
 
-Search issues across repos:
+Search issues across dryvist repositories:
 
 ```bash
-curl -sS -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  "https://api.github.com/search/issues?q=repo:dryvist/ansible-proxmox-apps+is:issue+is:open+label:bug"
+HERMES_TRUST_BOUNDARY=private gh api -X GET search/issues \
+  -f q="org:dryvist is:issue is:open label:bug"
 ```
 
 Create an issue:
 
 ```bash
-curl -sS -X POST -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/{owner}/{repo}/issues \
-  -d '{"title":"fix: honeypot index missing","body":"Details and repro.","labels":["bug"]}'
+HERMES_TRUST_BOUNDARY=public HERMES_GH_TOKEN_SET=author gh api "repos/$OWNER/$REPO/issues" \
+  --method POST --input - <<'JSON'
+{"title":"fix: a concise title","body":"Evidence and next steps.","labels":["bug"]}
+JSON
 ```
 
 Comment on an issue:
 
 ```bash
-curl -sS -X POST -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/{owner}/{repo}/issues/{n}/comments \
-  -d '{"body":"Confirmed on the latest converge."}'
+HERMES_TRUST_BOUNDARY=private HERMES_GH_TOKEN_SET=author gh api "repos/$OWNER/$REPO/issues/$NUMBER/comments" \
+  --method POST --input - <<'JSON'
+{"body":"Confirmed on the latest converge."}
+JSON
 ```
 
-Update / relabel an issue:
+Relabel, or close an issue:
 
 ```bash
-curl -sS -X PATCH -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/{owner}/{repo}/issues/{n} \
-  -d '{"labels":["bug","triage"]}'
+HERMES_TRUST_BOUNDARY=public HERMES_GH_TOKEN_SET=author gh api "repos/$OWNER/$REPO/issues/$NUMBER" \
+  --method PATCH --input - <<'JSON'
+{"labels":["bug","triage"]}
+JSON
 ```
-
-Close an issue:
 
 ```bash
-curl -sS -X PATCH -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/{owner}/{repo}/issues/{n} \
-  -d '{"state":"closed"}'
+HERMES_TRUST_BOUNDARY=public HERMES_GH_TOKEN_SET=author gh api "repos/$OWNER/$REPO/issues/$NUMBER" \
+  --method PATCH --input - <<'JSON'
+{"state":"closed"}
+JSON
 ```
 
-### Projects v2 (GraphQL)
+## Projects v2
 
-All Projects v2 calls go to `https://api.github.com/graphql`.
-
-List the dryvist org's projects (get each project's `number`, `title`, `id`):
-
-```bash
-curl -sS -X POST -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  https://api.github.com/graphql \
-  -d '{"query":"query { organization(login: \"dryvist\") { projectsV2(first: 20) { nodes { number title id } } } }"}'
-```
-
-Add an issue to a project. First fetch the issue's node id, then add it:
-
-```bash
-# 1) issue node id
-curl -sS -X POST -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  https://api.github.com/graphql \
-  -d '{"query":"query { repository(owner: \"dryvist\", name: \"ansible-proxmox-apps\") { issue(number: 123) { id } } }"}'
-
-# 2) add it (projectId from the list query above, contentId = issue node id)
-curl -sS -X POST -H "Authorization: Bearer $GH_PAT_WRITE_PROJECT_ISSUES" \
-  https://api.github.com/graphql \
-  -d '{"query":"mutation { addProjectV2ItemById(input: {projectId: \"PVT_xxx\", contentId: \"I_xxx\"}) { item { id } } }"}'
-```
+This skill does not change organization Projects v2 boards. The wrapper needs a
+repository target for a write, and a board move has none, so the call is
+refused. Report the board action that is needed and stop; do not try to work
+around the refusal.
 
 ## Guardrails
 
-1. **Read before you write.** Fetch the repo/issue (and existing comments) before
-   editing, commenting, or closing — never act on a stale assumption.
+1. **Read before you write.** Fetch the issue and its existing comments before
+   you edit, comment on, or close it.
 2. **Clear, conventional titles.** Use a `type: summary` style (`fix:`, `feat:`,
    `docs:`, `chore:`) and a concise, specific summary.
-3. **Don't spam.** One focused issue or comment per concern; de-dup against open
-   issues first; do not reopen churn.
+3. **Don't spam.** One focused issue or comment per concern. De-duplicate
+   against open issues first, and do not reopen churn.
 4. **Label appropriately** so triage and project automation can route the item.
-5. **Never leak the token.** Never paste `GH_PAT_WRITE_PROJECT_ISSUES` (or any
-   secret) into an issue body, comment, PR text, or log output.
-6. **Issues + projects only.** This token is least-privilege by design — do not
-   use it (or attempt to use it) for code pushes, PR merges, or admin actions.
-   Code changes are the `dryvist/docs-pr` signed-commit path; merges are human-only.
+5. **Never leak credentials.** Never paste a token, a token file path, or a
+   secret into an issue body, comment, PR text, or log output.
+6. **Issues only.** Code changes go through the `dryvist/docs-pr` signed-commit
+   path. Merges, approvals, and admin actions are human-only.
