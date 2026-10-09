@@ -139,6 +139,14 @@
               inherit pkgs bundle;
             };
 
+            # Every skill's tests/test_*.py, run against the source tree.
+            skill-tests = pkgs.runCommand "skill-tests" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+              for d in ${./data/skills/dryvist}/*/tests; do
+                (cd "$d" && python3 -m unittest discover -s . -p 'test_*.py') || exit 1
+              done
+              touch $out
+            '';
+
             # Listed as a CHECK, not merely a package, because `nix flake
             # check` EVALUATES packages without building them — it prints
             # "build skipped" and passes. Confirmed against a probe flake whose

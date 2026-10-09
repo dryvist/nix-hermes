@@ -114,7 +114,7 @@ pkgs.runCommand "${agent}-bundle" { } ''
   # was not truncated by a frontmatter-stripping regression, the same
   # protection the persona sentinels above give the catalog bodies.
   grep -qF 'Ship the simplest surgical fix matching existing style' $out/SOUL.md
-  grep -qF 'an autonomous orchestrator, owning a task through completion' $out/SOUL.md
+  grep -qF 'an autonomous agent, owning a task through completion' $out/SOUL.md
   grep -qF 'Behavior that applies to every task' $out/SOUL.md
   grep -qF 'A public, git-committed artifact' $out/SOUL.md
 ''
