@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.20.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.19.0...nix-hermes-v0.20.0) (2026-10-09)
+
+
+### Features
+
+* **zammad-incidents:** file incidents through a search-then-append-or-create helper ([b64c8cb](https://github.com/dryvist/nix-hermes/commit/b64c8cbd8a0da1f8e1c47e9bd18bd10e74981e5c))
+* **zammad-incidents:** file incidents through a search-then-append-or-create helper ([fcfadb7](https://github.com/dryvist/nix-hermes/commit/fcfadb74c9b974d5a409adadfbe7c0fe3872b18e))
+
 ## [0.19.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.18.0...nix-hermes-v0.19.0) (2026-10-05)
 
 
