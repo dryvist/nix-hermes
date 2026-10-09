@@ -1,7 +1,7 @@
 ---
 name: dryvist-zammad-incidents
 description: Open, update, dedupe, triage, resolve, and auto-close typed homelab incidents in Zammad (ITSM system of record) via REST — keyed on finding_key, typed outage/weakness/hygiene with per-type closure, lifecycle-tagged to yield to human touch
-version: 1.2.0
+version: 1.3.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -43,33 +43,20 @@ Splunk search `Ingest Stalled` on `index=Firewall` becomes
 `splunk:ingest-stalled:index=firewall`, never the raw casing — drift here
 defeats dedup.
 
-Put it in the title as `fk:splunk:ingest-stalled:index=firewall`, then search
-for it (`state.name:(new OR open)` keeps it to LIVE incidents):
-
-```bash
-curl -sS -G -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  --data-urlencode 'query=state.name:(new OR open) AND title:"fk:splunk:ingest-stalled:index=firewall"' \
-  --data-urlencode 'limit=5' --data-urlencode 'expand=false' \
-  "$ZAMMAD_URL/api/v1/tickets/search"
-```
-
-A paraphrased `fk:` key can slip past the exact match, so also run a
-backstop: same shape, `query` swapped for a normalized title prefix (first 5
-words of the summary, lowercased, punctuation stripped) across every live
-state. Either hits → **append** (Section 3); neither does → **create**
-(Section 2).
+Put it in the title as `fk:splunk:ingest-stalled:index=firewall`. Never
+hand-build the search or the create: file every incident through the helper,
+which searches the live states (`new`, `open`, `pending reminder`,
+`pending close`) for that exact key, then **appends** to the match or
+**creates** the ticket when there is none (Section 2). It normalizes the key
+(lowercase, whitespace → `-`) and refuses one that is not
+`fk:<source>:<rule>:<entity>`.
 
 ---
 
 ## 2. Create an incident
 
-File **as yourself** — Zammad requires a customer, and your identity routes
-it into your dedicated service org. Look your login up once per session:
-
-```bash
-ZAMMAD_SELF=$(curl -sS -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  "$ZAMMAD_URL/api/v1/users/me" | jq -r .login)
-```
+The helper files **as yourself** (`users/me`), into `Incidents`, with the
+`auto-managed` and `type:<x>` tags.
 
 Every ticket has a **type**, chosen before you write the article — it decides
 how the ticket can close (Section 5):
@@ -80,43 +67,24 @@ how the ticket can close (Section 5):
 | `weakness` | Security/config finding, fixed by code | `url:<PR or task URL>`. Unknown yet → `url:pending`, filled in at next triage |
 | `hygiene` | Cleanup/doc/to-do, no recovery query | `ttl:<days>`, default `14` |
 
-The first article's body MUST open with these two lines, verbatim shape:
-
-```
-type: outage|weakness|hygiene
-resolved_when: probe:<bounded query> | url:<PR or task URL> | ttl:<days>
-```
+The helper writes the first article as `type:` and `resolved_when:` lines,
+then your facts. Put the facts (what you observed, the bounded query, the
+numbers) in a file and run:
 
 ```bash
-curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tickets" -d '{
-    "title": "fk:<source>:<rule>:<entity> — <human summary>", "group": "Incidents",
-    "priority_id": <P>, "customer": "'"$ZAMMAD_SELF"'",
-    "detection_method": "<probe|user-report|alert|agent|other>",
-    "source_issue": "<URL, or omit if none known yet>",
-    "article": {
-      "subject": "<short>",
-      "body": "type: <outage|weakness|hygiene>\nresolved_when: <probe:... | url:... | ttl:...>\n\n<what you observed, the bounded query, the numbers>",
-      "type": "note", "internal": true
-    }
-  }'
+python3 "${HERMES_HOME:-$HOME/.hermes}/skills/dryvist/zammad-incidents/scripts/file_incident.py" \
+  --key 'fk:<source>:<rule>:<entity>' --summary '<human summary>' \
+  --type <outage|weakness|hygiene> \
+  --resolved-when '<probe:... | url:... | ttl:...>' \
+  --priority <1-4> --detection-method <probe|user-report|alert|agent|other> \
+  [--source-issue '<URL>'] --body-file <facts file>
 ```
 
-`detection_method`: `probe`, `user-report`, `alert` (Splunk), `agent`
-(self-audit), or `other`. Set `source_issue` to the originating URL when
-known; fill it in for `weakness` tickets once the fixing PR/task exists.
-
-Tag it `auto-managed` **and** `type:<x>` so Section 5/6 can own it without
-re-parsing the article body:
-
-```bash
-curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tags/add" \
-  -d '{"object": "Ticket", "o_id": <id>, "item": "auto-managed"}'
-curl -sS -X POST -H "Authorization: Token token=$ZAMMAD_API_TOKEN" \
-  -H 'Content-Type: application/json' "$ZAMMAD_URL/api/v1/tags/add" \
-  -d '{"object": "Ticket", "o_id": <id>, "item": "type:<outage|weakness|hygiene>"}'
-```
+It prints `{"action": "appended"|"created", "id": ..., "number": ...}` and
+exits non-zero on any API failure. `detection_method`: `probe`,
+`user-report`, `alert` (Splunk), `agent` (self-audit), or `other`. Set
+`--source-issue` to the originating URL when known; fill it in for
+`weakness` tickets once the fixing PR/task exists.
 
 **Severity mapping** — Splunk `severity` → `priority_id`: `critical`→`4`
 (P1 down/security), `high`→`3` (P2 major degradation), `medium`→`2` (P3
@@ -124,8 +92,8 @@ minor/single-source), `low`/`info`→`1` (P4 cosmetic). Non-Splunk sources use
 the same P-level judgement.
 
 File into **`Incidents`**, articles factual and numbers-backed, no raw
-events. Creation stays one API call plus the two tag calls — never gate it
-behind approval or a rate limit.
+events. Creation stays one helper call — never gate it behind approval or a
+rate limit.
 
 ---
 
