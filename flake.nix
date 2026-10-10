@@ -13,7 +13,7 @@
     };
 
     dryvist-github = {
-      url = "github:dryvist/.github";
+      url = "github:dryvist/.github?ref=v1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -29,7 +29,7 @@
     # input-addressed, so a relock moves hermes-bundle's path even when every
     # shipped byte is the same — a path change proves nothing on its own.
     ai-llm-prompts = {
-      url = "github:dryvist/ai-llm-prompts";
+      url = "github:dryvist/ai-llm-prompts?ref=v1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -48,7 +48,7 @@
     # the loader needs (`version` included), so a relock to a revision that
     # lacks it fails the build rather than shipping quietly.
     claude-code-plugins = {
-      url = "github:dryvist/claude-code-plugins";
+      url = "github:dryvist/claude-code-plugins?ref=v6";
       flake = false;
     };
 
@@ -62,7 +62,7 @@
     #
     # Tracks the default branch (develop).
     ai-assistant-instructions = {
-      url = "github:dryvist/ai-assistant-instructions";
+      url = "github:dryvist/ai-assistant-instructions?ref=v1";
       flake = false;
     };
 
