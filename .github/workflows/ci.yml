@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # `nix flake check` runs in the org CI gate (ci-gate.yml, `nix_validate`).
 jobs:
   # flake.nix and flake.lock must agree, and `nix flake check` does not assert
