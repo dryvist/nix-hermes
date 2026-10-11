@@ -11,7 +11,7 @@ built with Nix from the same sources the rest of the AI config ecosystem uses.
 No installation. Consumers build the bundle straight from the flake:
 
 ```sh
-nix build github:dryvist/nix-hermes#hermes-bundle
+nix build "github:dryvist/nix-hermes?ref=vN#hermes-bundle"
 ```
 
 The result is a static tree an Ansible role (or anything else) copies verbatim
