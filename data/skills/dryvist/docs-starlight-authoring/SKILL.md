@@ -14,7 +14,7 @@ metadata:
 
 # dryvist docs-starlight-authoring
 
-Content rules for `dryvist/docs-starlight`, the private Astro Starlight
+Content rules for `dryvist/docs-private`, the private Astro Starlight
 knowledge base. Use this to shape a page correctly — frontmatter,
 components, structure — before handing the change to `docs-pr` for the
 actual signed, draft PR. This skill only covers *what to write*; `docs-pr`
@@ -22,7 +22,7 @@ covers *how it gets committed and opened*. Always defer to `docs-pr` for
 delivery — never `git commit`/`git push` yourself.
 
 Source of truth: this content is kept in sync with the repo-local
-`.claude/skills/docs-starlight-authoring/SKILL.md` in `dryvist/docs-starlight`
+`.claude/skills/docs-starlight-authoring/SKILL.md` in `dryvist/docs-private`
 itself. If the two drift, the repo-local copy wins — it is closer to the
 code it describes.
 
@@ -31,7 +31,7 @@ code it describes.
 `dryvist/docs` (public, Mintlify) uses a different component library and a
 strict PUBLIC-information-only content boundary. Never reuse Mintlify syntax
 here, and never route anything sensitive there — `docs-pr`'s privacy-routing
-rule (internal/sensitive → docs-starlight only) already enforces this; this
+rule (internal/sensitive → docs-private only) already enforces this; this
 skill covers the *starlight-specific* half of getting the page right.
 
 ## Where content lives

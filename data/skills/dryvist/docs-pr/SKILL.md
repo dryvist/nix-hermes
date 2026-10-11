@@ -19,10 +19,10 @@ never-merged** pull requests whose commits are **GitHub-verified** (signed). Use
 this after you have curated knowledge in the `llm-wiki` and identified a concrete,
 sourced documentation improvement.
 
-Repo: `dryvist/docs-starlight` (PRIVATE, Astro Starlight) — internal docs.
+Repo: `dryvist/docs-private` (PRIVATE, Astro Starlight) — internal docs.
 
 Publishing to the public docs site is not this skill's job: the publish workflow
-in `docs-starlight` projects the pages marked publishable and owns that path end
+in `docs-private` projects the pages marked publishable and owns that path end
 to end.
 
 ## Hard rules (never violate)
@@ -35,9 +35,9 @@ to end.
    App identity. NEVER `git commit`/`git push` — the org requires signed commits
    and a plain push is rejected.
 3. **The one rule on public vs. private:** committed docs content for the
-   private docs site goes to `dryvist/docs-starlight` only, never to the
+   private docs site goes to `dryvist/docs-private` only, never to the
    public `dryvist/docs` site. Everything you author here targets
-   `docs-starlight`. Never open a PR against the public docs repo, and
+   `docs-private`. Never open a PR against the public docs repo, and
    redact secrets from every string before it leaves the machine.
 4. **No emoji** anywhere in branch names, titles, commit messages, or bodies.
 5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, label
@@ -59,7 +59,7 @@ do not fall back to any other credential.
 
 ## Procedure
 
-Set `R=dryvist/docs-starlight`, `B=docs/hermes/<slug>-$(date +%F)`.
+Set `R=dryvist/docs-private`, `B=docs/hermes/<slug>-$(date +%F)`.
 
 1. Preflight. Both must succeed before you touch anything:
 
@@ -118,7 +118,7 @@ Set `R=dryvist/docs-starlight`, `B=docs/hermes/<slug>-$(date +%F)`.
 
 ## Verification
 
-A PR is proof only if `gh api repos/dryvist/docs-starlight/pulls/<n>` shows
+A PR is proof only if `gh api repos/dryvist/docs-private/pulls/<n>` shows
 `draft: true` and the head commit's `verification.verified == true`:
 
 ```sh
