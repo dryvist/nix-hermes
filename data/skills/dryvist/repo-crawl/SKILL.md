@@ -40,7 +40,7 @@ Cursor and memory live at `$HERMES_HOME/data/repo-crawl/state.json`:
 ```json
 {
   "repo_cursor": 2,
-  "handled": ["D2:docs-starlight:src/content/docs/d/hermes.mdx:12", "..."],
+  "handled": ["D2:docs-private:src/content/docs/d/hermes.mdx:12", "..."],
   "open_prs": {"nix-hermes": 118}
 }
 ```
@@ -54,7 +54,7 @@ Cursor and memory live at `$HERMES_HOME/data/repo-crawl/state.json`:
   (below) does not need a fresh API search every run.
 
 Repo allowlist starts narrow and widens only as PRs prove clean: begin with
-`docs-starlight`, `nix-hermes`, `ai-llm-prompts`, `ansible-proxmox-ai`.
+`docs-private`, `nix-hermes`, `ai-llm-prompts`, `ansible-proxmox-ai`.
 
 ## Procedure
 
