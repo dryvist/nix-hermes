@@ -26,7 +26,7 @@
     {
       "id": "D2",
       "title": "markdown page missing a required frontmatter key",
-      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "repos": ["docs-private", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
       "detect": "frontmatter_missing",
       "config": {
         "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md"],
@@ -41,7 +41,7 @@
     {
       "id": "D3",
       "title": "broken relative markdown link",
-      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "repos": ["docs-private", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
       "detect": "broken_links",
       "config": {
         "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md", "**/*.md"]
@@ -55,7 +55,7 @@
     {
       "id": "D4",
       "title": "placeholder or TODO/FIXME text left in shipped docs",
-      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "repos": ["docs-private", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
       "detect": "placeholder_text",
       "config": {
         "globs": ["src/content/docs/**/*.md", "src/content/docs/**/*.mdx", "docs/**/*.md"],
@@ -70,7 +70,7 @@
     {
       "id": "D5",
       "title": "doc claims a fact token that no longer exists in the code tree",
-      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "repos": ["docs-private", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
       "detect": "stale_fact_token",
       "config": {
         "tokens": [
@@ -90,7 +90,7 @@
     {
       "id": "D6",
       "title": "markdownlint finding",
-      "repos": ["docs-starlight", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
+      "repos": ["docs-private", "nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps"],
       "detect": "markdownlint",
       "config": {
         "binary": "markdownlint-cli2",
@@ -156,7 +156,7 @@
     {
       "id": "C1",
       "title": "stale .worktrees or .bak artifact",
-      "repos": ["nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps", "docs-starlight"],
+      "repos": ["nix-hermes", "ansible-proxmox-ai", "ansible-proxmox-apps", "docs-private"],
       "detect": "stale_artifacts",
       "config": {
         "globs": ["**/.worktrees/*", "**/*.bak"],
