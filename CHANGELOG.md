@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.20.0...nix-hermes-v0.20.1) (2026-10-11)
+
+
+### Bug Fixes
+
+* **skills:** update the private docs repository name ([#183](https://github.com/dryvist/nix-hermes/issues/183)) ([15fe512](https://github.com/dryvist/nix-hermes/commit/15fe512eba783423ea5133a77a9d78656c7e0445))
+
 ## [0.20.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.19.0...nix-hermes-v0.20.0) (2026-10-09)
 
 
