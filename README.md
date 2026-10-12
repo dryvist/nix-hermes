@@ -20,19 +20,30 @@ into the agent's home:
 ```text
 result/
 ├── skills/dryvist/<skill>/   # SKILL.md + scripts/ + tests/ per skill
-└── SOUL.md                   # persona: shared autonomous base + Hermes variant
+├── SOUL.md                   # shared autonomous base + Hermes variant
+├── limits.json               # fleet context defaults
+├── soul/profiles/            # profile addenda
+└── rules/
+    ├── always-on/            # workstation rules read by path
+    └── on-demand/            # rules read for specific activities
 ```
 
 ## Usage
 
 - `nix build .#hermes-bundle` — build the bundle locally.
 - `nix flake check` — build + validate every skill's frontmatter and the
-  SOUL.md composition sentinels.
+  SOUL.md composition, serving-tokenizer context budgets, and skill tests.
 
 `SOUL.md` is composed at build time from the shared autonomous base and Hermes
 surface in the immutable `ai-llm-prompts` flake input. The bundle strips OKF
 frontmatter before delivery. Most skills are owned under `data/skills/dryvist/`;
-the rest arrive through the allowlist below.
+the rest arrive through the allowlist below. The four always-on workstation
+rules are copied unchanged to `rules/always-on/` for read-by-path access and
+are not appended to `SOUL.md`. Profile addenda are vendored under
+`data/soul/profiles/` and shipped under `soul/profiles/`; the consuming role
+composes each with `SOUL.md` and `kanban-lifecycle.md`. Fleet context limits
+are defined once in `data/context-limits.json`, copied to `limits.json`, and
+enforced against the pinned serving tokenizer by `checks/context-budget.nix`.
 
 ## Sharing skills authored elsewhere
 

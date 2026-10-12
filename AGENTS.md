@@ -15,14 +15,22 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 | ---------------------------------- | ---------------------------------------------------------------------------- |
 | `data/skills/dryvist/<skill>/`     | Hermes-specific skills (SKILL.md + scripts + tests)                          |
 | `data/shared-skills-allowlist.nix` | Opt-in gate for reviewed workstation skills, one entry each                  |
+| `data/context-limits.json`         | Fleet context defaults, copied to each bundle                                |
+| `data/soul/profiles/`              | Profile addenda composed by the consuming role                               |
 | `lib/bundle.nix`                   | Composes SOUL from the locked `ai-llm-prompts` base and Hermes prompt bodies |
 | `checks/validate-skills.nix`       | Frontmatter + SOUL sentinel contract check                                   |
+| `checks/context-budget.nix`        | Serving-tokenizer budget gate for base and composed profile SOUL files       |
 
 ## Rules
 
-- SOUL.md prompts are NEVER vendored here. They are read from the immutable
-  `ai-llm-prompts` input and have OKF frontmatter stripped at build time.
-  This repository continues to own Hermes skills only.
+- Shared base and named-agent SOUL prompts are NEVER vendored here. They are
+  read from the immutable `ai-llm-prompts` input with OKF frontmatter
+  stripped at build time. This repository owns Hermes skills and the profile
+  addenda under `data/soul/profiles/`.
+- SOUL.md contains only the shared base and named persona. The four
+  always-on workstation rules are copied unchanged under
+  `$out/rules/always-on/` for read-by-path access.
+- Always-on context budgets: `data/context-limits.json`; the `checks/context-budget.nix` gate uses Qwen's serving tokenizer. Never raise one to fit content.
 - Locally authored `data/skills/dryvist/` skills must keep `name:`,
   `description:`, `version:`, and the `metadata.hermes` block Hermes uses.
   Allowlisted upstream skills are delivered byte-for-byte under their own
