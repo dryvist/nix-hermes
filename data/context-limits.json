@@ -1,0 +1,29 @@
+{
+  "soul_max_tokens": 3000,
+  "soul_base_max_tokens": 2400,
+  "context_file_max_chars": 12000,
+  "file_read_max_chars": 24000,
+  "tool_output": {
+    "max_bytes": 16000,
+    "max_lines": 400,
+    "max_line_length": 500
+  },
+  "web": {
+    "extract_char_limit": 8000
+  },
+  "delegation": {
+    "max_summary_chars": 6000
+  },
+  "tools": {
+    "tool_search": {
+      "listing_max_tokens": 1500
+    }
+  },
+  "memory": {
+    "memory_char_limit": 2200,
+    "user_char_limit": 1375
+  },
+  "compression": {
+    "proactive_prune_tokens": 32000
+  }
+}
