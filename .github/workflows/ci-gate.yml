@@ -34,10 +34,12 @@ jobs:
     with:
       all_systems: false
       nix_validate: true
+      token_limits: true
       filters: |
         markdown:
           - '**.md'
           - '.markdownlint*'
+          - 'data/**'
         nix:
           - '**.nix'
           - 'flake.lock'
