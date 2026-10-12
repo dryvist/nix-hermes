@@ -55,10 +55,9 @@
     # Owner of the shared agentsmd rules — the always-on behavioral contract
     # every workstation harness already follows (Claude/Codex/Gemini via
     # AGENTS.md/CLAUDE.md/GEMINI.md symlinks). Hermes runs unattended and
-    # today follows none of it; lib/bundle.nix appends the same four
-    # always-on files (per that repo's own `agentsmd/rules/rule-tiers.md`)
-    # to SOUL.md and ships the on-demand tier alongside it, so this agent
-    # reads the identical rule set from the identical single source.
+    # lib/bundle.nix copies the four always-on files unchanged to
+    # rules/always-on/ and ships the on-demand tier alongside them; Hermes
+    # reads both by path, while SOUL.md stays lean.
     #
     # Tracks the default branch (develop).
     ai-assistant-instructions = {
@@ -115,6 +114,12 @@
           # appear in BOTH packages and checks. The checks entry is the
           # load-bearing one; see there for why.
           donnaBundle = mkBundle "donna";
+
+          contextBudgetChecks = import ./checks/context-budget.nix {
+            inherit pkgs;
+            hermesBundle = bundle;
+            inherit donnaBundle;
+          };
         in
         {
           # data/ is verbatim agent content (skills + SOUL variant) consumed
@@ -131,6 +136,11 @@
           };
 
           checks = {
+            inherit (contextBudgetChecks)
+              context-budget
+              context-budget-fixture
+              ;
+
             validate-skills = import ./checks/validate-skills.nix {
               inherit pkgs bundle;
             };

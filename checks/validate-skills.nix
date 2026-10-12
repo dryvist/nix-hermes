@@ -42,9 +42,6 @@ pkgs.runCommand "validate-skills" { } ''
 
   [ -f "${bundle}/skills/dryvist/monitoring-first/SKILL.md" ] \
     || { echo "monitoring-first skill is missing from the Hermes bundle"; fail=1; }
-  monitoring_rule='Check system state with monitoring first; follow the `monitoring-first` skill before direct shell probes.'
-  [ "$(grep -F -o "$monitoring_rule" ${bundle}/SOUL.md | wc -l | tr -d ' ')" -eq 1 ] \
-    || { echo "SOUL.md must contain the monitoring-first rule exactly once"; fail=1; }
 
   # A skill naming a helper script the bundle does not ship leaves the agent
   # following instructions it cannot run — silently, since nothing else here
@@ -60,7 +57,7 @@ pkgs.runCommand "validate-skills" { } ''
   # SOUL sentinels: the shared base block and the Hermes surface variant.
   grep -q 'autonomous engineering agent' ${bundle}/SOUL.md || { echo "SOUL.md missing base"; fail=1; }
   grep -q '^## You are Hermes' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes variant"; fail=1; }
-  grep -q '^Tools:$' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes tools"; fail=1; }
+  grep -qE '^Tools:$|Act through tools' ${bundle}/SOUL.md || { echo "SOUL.md missing Hermes tool behavior"; fail=1; }
   grep -q '^Escalation routing:$' ${bundle}/SOUL.md || { echo "SOUL.md missing escalation routing"; fail=1; }
   grep -q '^Model fabric:' ${bundle}/SOUL.md || { echo "SOUL.md missing model fabric"; fail=1; }
   ! grep -q '^type: LLM Prompt' ${bundle}/SOUL.md || { echo "SOUL.md leaked OKF frontmatter"; fail=1; }
@@ -89,7 +86,7 @@ pkgs.runCommand "validate-skills" { } ''
   # revisited first.
   grep -qE '\$[0-9]+(\.[0-9]+)?/day' ${bundle}/SOUL.md \
     || { echo "SOUL.md states no spend cap; nothing else enforces one"; fail=1; }
-  grep -q 'YOU enforce' ${bundle}/SOUL.md \
+  grep -qE 'YOU enforce|self-enforced budget' ${bundle}/SOUL.md \
     || { echo "SOUL.md's spend cap is not marked self-enforced"; fail=1; }
 
   [ "$fail" -eq 0 ] || exit 1
