@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.20.1...nix-hermes-v0.21.0) (2026-10-13)
+
+
+### Features
+
+* **bundle:** lean SOUL, context limits data file, and real-tokenizer budget check ([#195](https://github.com/dryvist/nix-hermes/issues/195)) ([466661c](https://github.com/dryvist/nix-hermes/commit/466661c57d194bd3cad440d62c6ebb563ab45b37))
+
 ## [0.20.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.20.0...nix-hermes-v0.20.1) (2026-10-11)
 
 
