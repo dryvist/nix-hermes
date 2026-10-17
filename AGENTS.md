@@ -43,10 +43,9 @@ deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 - Owned dryvist flake inputs name a floating major tag in the URL
   (`github:dryvist/<repo>?ref=vN`). `flake.lock` holds the exact revision, and
   a bump is a pull request.
-  `deps-flake-lock.yml` is the single writer of `flake.lock`. A `flake.nix`
-  change needs a matching `nix flake lock`; the Lock Consistency CI job
-  enforces that, because `nix flake check` does not: given a stale lock it
-  rewrites the file and exits 0.
+  Renovate lock-file maintenance is the single writer of `flake.lock`. A `flake.nix`
+  change needs a matching `nix flake lock`; the Lock Consistency CI job enforces
+  that, because `nix flake check` may rewrite a stale lock and exit 0.
 
 ## Hermes runtime behavior (non-obvious)
 
