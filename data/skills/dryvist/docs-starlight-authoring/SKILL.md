@@ -1,7 +1,7 @@
 ---
 name: dryvist-docs-starlight-authoring
 description: Write correctly-formed docs-starlight content before handing it to docs-pr for delivery
-version: 1.0.0
+version: 1.0.1
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -17,7 +17,7 @@ metadata:
 Content rules for `dryvist/docs-private`, the private Astro Starlight
 knowledge base. Use this to shape a page correctly — frontmatter,
 components, structure — before handing the change to `docs-pr` for the
-actual signed, draft PR. This skill only covers *what to write*; `docs-pr`
+actual signed, human-review PR. This skill only covers *what to write*; `docs-pr`
 covers *how it gets committed and opened*. Always defer to `docs-pr` for
 delivery — never `git commit`/`git push` yourself.
 
