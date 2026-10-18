@@ -43,11 +43,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792202218,
-        "narHash": "sha256-27D+pPZvp0g0W20g8/pNCInHK3oM3yJKes5dtIr2ow0=",
+        "lastModified": 1792327191,
+        "narHash": "sha256-3cxwt3P/LBFuUEAhsx3723WYsf6Sq8CFkeppP9sz8ZE=",
         "owner": "dryvist",
         "repo": "ai-llm-prompts",
-        "rev": "8219a761625487134ff5f945679e0d1480390e8b",
+        "rev": "94a7e1fa93b34c9fddb3f115961f714c613a25a6",
         "type": "github"
       },
       "original": {
@@ -93,11 +93,11 @@
     "claude-code-plugins_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1792226969,
-        "narHash": "sha256-Q/yv1C4NKt9CgqgARK/yALnAXMLdrNBQqZotjMmGuuo=",
+        "lastModified": 1792325611,
+        "narHash": "sha256-udZXf9u+QAVRoXKwypOCJYYYsUtn/WVa6cO6vGW+rmY=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "a91e8766e83505503053ab34c9164abf82d27bb6",
+        "rev": "41c595782461b083b62e422626e046757e6a0315",
         "type": "github"
       },
       "original": {
@@ -116,11 +116,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792268011,
-        "narHash": "sha256-6CswH2jJud7ouUUCqbepiDWL4hR2KwmsKTr5rC8xg40=",
+        "lastModified": 1792327415,
+        "narHash": "sha256-plmxaK1IrN5nDssGEp9RzwyBoPHyQYazZ9GwGnZYW3g=",
         "owner": "JacobPEvans",
         "repo": ".github",
-        "rev": "be2c3eb47b3119e742b4e0bf712f1c0ada56ec2d",
+        "rev": "b6c7d9be8f93af36e215831b2d28a60e13ab2227",
         "type": "github"
       },
       "original": {
