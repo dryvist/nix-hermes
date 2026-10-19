@@ -3,28 +3,11 @@
     "ai-assistant-instructions": {
       "flake": false,
       "locked": {
-        "lastModified": 1791689938,
-        "narHash": "sha256-vCjPPY9TMaQvEkdCZnGzQOhy+b71A7+p+PE2p5r8eyc=",
+        "lastModified": 1792327221,
+        "narHash": "sha256-iKLVEY5i58OwRqBKof3XruRrcsVW0HH2pB6++p/bOME=",
         "owner": "dryvist",
         "repo": "ai-assistant-instructions",
-        "rev": "f652b04d5a3edffdee975764b56970cc23c033be",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dryvist",
-        "ref": "v1",
-        "repo": "ai-assistant-instructions",
-        "type": "github"
-      }
-    },
-    "ai-assistant-instructions_2": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791599289,
-        "narHash": "sha256-HrfsbTRLKJQ8AV3wBm8gQQfytWZ4hz7Moh7KMeQ6b8s=",
-        "owner": "dryvist",
-        "repo": "ai-assistant-instructions",
-        "rev": "8726293d4189159500e8814ccc7e3afbec8ec859",
+        "rev": "b26d514974ab8fa5425e66010f3c3952305a7534",
         "type": "github"
       },
       "original": {
@@ -36,18 +19,17 @@
     },
     "ai-llm-prompts": {
       "inputs": {
-        "ai-assistant-instructions": "ai-assistant-instructions_2",
         "claude-code-plugins": "claude-code-plugins",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1792327191,
-        "narHash": "sha256-3cxwt3P/LBFuUEAhsx3723WYsf6Sq8CFkeppP9sz8ZE=",
+        "lastModified": 1792355771,
+        "narHash": "sha256-0ilmxf0eI3bbakqraZbkvimNBBcQsLeUL+KYq+VnUiE=",
         "owner": "dryvist",
         "repo": "ai-llm-prompts",
-        "rev": "94a7e1fa93b34c9fddb3f115961f714c613a25a6",
+        "rev": "6f50d358f26563062d489e15d9ca034c37df685f",
         "type": "github"
       },
       "original": {
@@ -93,11 +75,11 @@
     "claude-code-plugins_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1792325611,
-        "narHash": "sha256-udZXf9u+QAVRoXKwypOCJYYYsUtn/WVa6cO6vGW+rmY=",
+        "lastModified": 1792347322,
+        "narHash": "sha256-IUGecoMvGuqw0wsX5b8GCROk6o+bZb90lBjVCZCfZto=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "41c595782461b083b62e422626e046757e6a0315",
+        "rev": "fe622c40cdec4b54a7a419d806ef0ae32f322f8b",
         "type": "github"
       },
       "original": {
@@ -116,11 +98,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792327415,
-        "narHash": "sha256-plmxaK1IrN5nDssGEp9RzwyBoPHyQYazZ9GwGnZYW3g=",
+        "lastModified": 1792347836,
+        "narHash": "sha256-m6SQjUxHkILFoi8LXuUcnrotO5K4kh8NVwEg2v1LhJ4=",
         "owner": "JacobPEvans",
         "repo": ".github",
-        "rev": "b6c7d9be8f93af36e215831b2d28a60e13ab2227",
+        "rev": "9ec96ccce0784075e23965a54ec45c9bb4c64101",
         "type": "github"
       },
       "original": {
