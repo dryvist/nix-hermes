@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.21.0...nix-hermes-v0.22.0) (2026-10-17)
+
+
+### Features
+
+* **skills:** open Hermes doc PRs ready with human:review instead of as drafts ([#203](https://github.com/dryvist/nix-hermes/issues/203)) ([406d9c5](https://github.com/dryvist/nix-hermes/commit/406d9c5c3b13e0bc0e785b9e2b1e68a91ced003d))
+
 ## [0.21.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.20.1...nix-hermes-v0.21.0) (2026-10-13)
 
 

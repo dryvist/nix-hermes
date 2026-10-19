@@ -2,9 +2,9 @@
   description = "Shared content bundle (skills + SOUL persona) for the Hermes autonomous agent";
 
   inputs = {
-    # Channel branch = intended pin (unstable). Renovate CANNOT bump this: it
-    # updates an input when its ref changes, and a channel branch's ref never
-    # changes. deps-flake-lock.yml relocks the whole file on a schedule.
+    # Channel branch = intended pin (unstable). Renovate's Nix lock-file
+    # maintenance refreshes the locked revision even when the branch reference
+    # itself has not changed.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     flake-parts = {
@@ -13,7 +13,7 @@
     };
 
     dryvist-github = {
-      url = "github:dryvist/.github?ref=v1";
+      url = "github:JacobPEvans/.github?ref=v1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

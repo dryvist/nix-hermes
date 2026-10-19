@@ -3,28 +3,11 @@
     "ai-assistant-instructions": {
       "flake": false,
       "locked": {
-        "lastModified": 1791599289,
-        "narHash": "sha256-HrfsbTRLKJQ8AV3wBm8gQQfytWZ4hz7Moh7KMeQ6b8s=",
+        "lastModified": 1792327221,
+        "narHash": "sha256-iKLVEY5i58OwRqBKof3XruRrcsVW0HH2pB6++p/bOME=",
         "owner": "dryvist",
         "repo": "ai-assistant-instructions",
-        "rev": "8726293d4189159500e8814ccc7e3afbec8ec859",
-        "type": "github"
-      },
-      "original": {
-        "owner": "dryvist",
-        "ref": "v1",
-        "repo": "ai-assistant-instructions",
-        "type": "github"
-      }
-    },
-    "ai-assistant-instructions_2": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791599289,
-        "narHash": "sha256-HrfsbTRLKJQ8AV3wBm8gQQfytWZ4hz7Moh7KMeQ6b8s=",
-        "owner": "dryvist",
-        "repo": "ai-assistant-instructions",
-        "rev": "8726293d4189159500e8814ccc7e3afbec8ec859",
+        "rev": "b26d514974ab8fa5425e66010f3c3952305a7534",
         "type": "github"
       },
       "original": {
@@ -36,18 +19,17 @@
     },
     "ai-llm-prompts": {
       "inputs": {
-        "ai-assistant-instructions": "ai-assistant-instructions_2",
         "claude-code-plugins": "claude-code-plugins",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1791838703,
-        "narHash": "sha256-MYRsKxL85f2ft7SURQPfp4YLU88vZnd38yZJXD8QlaE=",
+        "lastModified": 1792355771,
+        "narHash": "sha256-0ilmxf0eI3bbakqraZbkvimNBBcQsLeUL+KYq+VnUiE=",
         "owner": "dryvist",
         "repo": "ai-llm-prompts",
-        "rev": "fdc86c4a5b06679ca94cb3cc5d01fbf11b1d779f",
+        "rev": "6f50d358f26563062d489e15d9ca034c37df685f",
         "type": "github"
       },
       "original": {
@@ -60,11 +42,11 @@
     "browser-use": {
       "flake": false,
       "locked": {
-        "lastModified": 1792090936,
-        "narHash": "sha256-0ZlDU0CJnjWxAGzUCS73t0RLHCQZJtK0tUUxHxtW6uo=",
+        "lastModified": 1792263201,
+        "narHash": "sha256-6cDX2m7R/I801+F3IkaAkkZfhVUdiG/9blWuTlk3gmc=",
         "owner": "browser-use",
         "repo": "browser-use",
-        "rev": "a71d5478e4187cbe5295aab6403dfe7e4a6861a4",
+        "rev": "aa093a843da5edbf323c0b4145c9b6a0db3ecde8",
         "type": "github"
       },
       "original": {
@@ -93,11 +75,11 @@
     "claude-code-plugins_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1791655841,
-        "narHash": "sha256-AHmXSdKPXe3pnyDCyKsivjyKCiNFXmMMS3Akj5efKnY=",
+        "lastModified": 1792347322,
+        "narHash": "sha256-IUGecoMvGuqw0wsX5b8GCROk6o+bZb90lBjVCZCfZto=",
         "owner": "dryvist",
         "repo": "claude-code-plugins",
-        "rev": "6391a538f217e99267ac92771df31457cb15380d",
+        "rev": "fe622c40cdec4b54a7a419d806ef0ae32f322f8b",
         "type": "github"
       },
       "original": {
@@ -116,15 +98,15 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1791657473,
-        "narHash": "sha256-zEscuyK2Pigzia0o4pk3akpLuO3gT7oRMtp94IGkd60=",
-        "owner": "dryvist",
+        "lastModified": 1792347836,
+        "narHash": "sha256-m6SQjUxHkILFoi8LXuUcnrotO5K4kh8NVwEg2v1LhJ4=",
+        "owner": "JacobPEvans",
         "repo": ".github",
-        "rev": "c4501ea67ce4469a5cc95216c9a989516da2adb8",
+        "rev": "9ec96ccce0784075e23965a54ec45c9bb4c64101",
         "type": "github"
       },
       "original": {
-        "owner": "dryvist",
+        "owner": "JacobPEvans",
         "ref": "v1",
         "repo": ".github",
         "type": "github"
@@ -213,11 +195,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1791956154,
-        "narHash": "sha256-jBYGPi4udQ9uo4KQp9m2J0546nJVQitG15gvZSaVVAs=",
+        "lastModified": 1792094642,
+        "narHash": "sha256-zp8ToDMnqZcu4o4IH9pdwXFXGp7yLm/M0dEnNWnyd7I=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "55bfb4d7437bd4e09ab7cba58a43bd68eb310044",
+        "rev": "fe13242281a67641c0102cdb1087f0ebe586c7df",
         "type": "github"
       },
       "original": {

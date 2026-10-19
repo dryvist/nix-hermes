@@ -1,7 +1,7 @@
 ---
 name: dryvist-docs-pr
-description: Open signed, draft, no-merge doc PRs to the private dryvist docs site
-version: 1.1.1
+description: Open signed, human-review, no-merge doc PRs to the private dryvist docs site
+version: 1.2.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -14,8 +14,9 @@ metadata:
 
 # dryvist docs-pr
 
-Contribute documentation to the private dryvist doc site by opening **draft,
-never-merged** pull requests whose commits are **GitHub-verified** (signed). Use
+Contribute documentation to the private dryvist doc site by opening
+**human-review, never-merged** pull requests whose commits are
+**GitHub-verified** (signed). Use
 this after you have curated knowledge in the `llm-wiki` and identified a concrete,
 sourced documentation improvement.
 
@@ -27,9 +28,10 @@ to end.
 
 ## Hard rules (never violate)
 
-1. **Draft only. Never merge.** Every PR opens as a draft. You have no authority
-   to merge, mark ready, or approve. A human reviews and merges. The org ruleset
-   also blocks you — do not try to work around it.
+1. **Human review only. Never merge.** Every PR opens ready for review with the
+   `human:review` label. You have no authority to merge, enable auto-merge, or
+   approve. A reviewer merges. The org ruleset also blocks you — do not try to
+   work around it.
 2. **Signed commits via the API only.** Commit exclusively through the
    `createCommitOnBranch` GraphQL mutation, which signs server-side under the
    App identity. NEVER `git commit`/`git push` — the org requires signed commits
@@ -40,15 +42,15 @@ to end.
    `docs-private`. Never open a PR against the public docs repo, and
    redact secrets from every string before it leaves the machine.
 4. **No emoji** anywhere in branch names, titles, commit messages, or bodies.
-5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, label
-   `cloud-routine`, and a `## Provenance` block in the body naming the source(s).
+5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, labels
+   `cloud-routine` and `human:review`, and a `## Provenance` block in the body naming the source(s).
 6. **Caps + de-dup.** Max 1 open PR per repo per day from this skill. Before
    opening, list existing open PRs and skip if a matching `docs:` PR already
    exists. If over the cap or a duplicate, decline cleanly — do nothing.
 7. **Small, sourced, voice-preserving.** One focused improvement per PR. Cite
    provenance. Never restyle or rewrite an author's voice.
 8. **Fail loud.** If the token is missing or a preflight check fails, stop and
-   report — never fall back to an unsigned or non-draft path.
+   report — never fall back to an unsigned or unlabeled path.
 
 ## Credential
 
@@ -105,12 +107,12 @@ Set `R=dryvist/docs-private`, `B=docs/hermes/<slug>-$(date +%F)`.
    file and a matching entry in `additions` — one commit per PR, so they all go
    in a single mutation. `deletions: [{path: $path}]` removes a file.
 
-4. Open the draft PR and apply the label:
+4. Open the PR and apply the labels:
 
    ```sh
-   gh pr create -R "$R" --draft --base "$BASE" --head "$B" \
+   gh pr create -R "$R" --base "$BASE" --head "$B" \
      --title "docs: <summary> [routine:hermes]" --body-file body.md \
-     --label cloud-routine
+     --label cloud-routine --label human:review
    ```
 
    `body.md` carries the `## Provenance` block (rule 5). Report the PR URL and
@@ -118,13 +120,13 @@ Set `R=dryvist/docs-private`, `B=docs/hermes/<slug>-$(date +%F)`.
 
 ## Verification
 
-A PR is proof only if `gh api repos/dryvist/docs-private/pulls/<n>` shows
-`draft: true` and the head commit's `verification.verified == true`:
+A PR is proof only if it carries the `human:review` label, has no auto-merge
+request, and the head commit's `verification.verified == true`:
 
 ```sh
-gh pr view <n> -R "$R" --json isDraft,headRefOid
+gh pr view <n> -R "$R" --json labels,autoMergeRequest,headRefOid
 gh api "repos/$R/commits/<oid>" --jq .commit.verification.verified
 ```
 
-Both must be true. If `verified` is false the commit did not go through the
+All three must hold. If `verified` is false the commit did not go through the
 mutation — the PR is invalid, say so and stop.
