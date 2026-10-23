@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.22.0...nix-hermes-v0.23.0) (2026-10-23)
+
+
+### Features
+
+* **splunk-monitor:** add UniFi gateway log guidance ([#216](https://github.com/dryvist/nix-hermes/issues/216)) ([8ec3d7f](https://github.com/dryvist/nix-hermes/commit/8ec3d7fad71431e3f939bd68e94da0c25b25497f))
+
 ## [0.22.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.21.0...nix-hermes-v0.22.0) (2026-10-17)
 
 
