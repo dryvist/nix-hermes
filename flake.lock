@@ -193,6 +193,23 @@
         "type": "github"
       }
     },
+    "jpe-ai-voice": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792806674,
+        "narHash": "sha256-ET/Fcbs2lZiAA+Qo3XjUyOW5iCdWEX2QmTJiT3QKm/k=",
+        "owner": "JacobPEvans",
+        "repo": "jpe-ai-voice",
+        "rev": "2bd82a45975369ee56c16dfbafe7f4a3aacb1ed5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JacobPEvans",
+        "ref": "v1.0.1",
+        "repo": "jpe-ai-voice",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1792502884,
@@ -217,6 +234,7 @@
         "claude-code-plugins": "claude-code-plugins_2",
         "dryvist-github": "dryvist-github",
         "flake-parts": "flake-parts",
+        "jpe-ai-voice": "jpe-ai-voice",
         "nixpkgs": "nixpkgs"
       }
     },

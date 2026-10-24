@@ -71,6 +71,13 @@
       url = "github:browser-use/browser-use";
       flake = false;
     };
+
+    # Voice-learning skill source. The bundle takes only the voice-learn skill
+    # through data/shared-skills-allowlist.nix.
+    jpe-ai-voice = {
+      url = "github:JacobPEvans/jpe-ai-voice?ref=v1.0.1";
+      flake = false;
+    };
   };
 
   outputs =
@@ -102,6 +109,7 @@
                 browser-use
                 claude-code-plugins
                 ai-assistant-instructions
+                jpe-ai-voice
                 ;
             };
 

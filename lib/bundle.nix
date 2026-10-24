@@ -24,6 +24,7 @@
   browser-use,
   claude-code-plugins,
   ai-assistant-instructions,
+  jpe-ai-voice,
   # Which persona this bundle carries. The value is BOTH the catalog fragment
   # basename (auto-ai-agent/<agent>.md) and the derivation name prefix, so a
   # bundle can never be named for one agent and filled with another's persona.
@@ -49,7 +50,7 @@ let
   # input must be added here and to the function arguments, so an entry can
   # never name an input this derivation does not actually receive.
   sharedSkillInputs = {
-    inherit browser-use claude-code-plugins;
+    inherit browser-use claude-code-plugins jpe-ai-voice;
   };
 
   allowlist = import ../data/shared-skills-allowlist.nix;
