@@ -75,7 +75,7 @@
     # Voice-learning skill source. The bundle takes only the voice-learn skill
     # through data/shared-skills-allowlist.nix.
     jpe-ai-voice = {
-      url = "github:JacobPEvans/jpe-ai-voice";
+      url = "github:JacobPEvans/jpe-ai-voice?ref=v1.0.0";
       flake = false;
     };
   };
