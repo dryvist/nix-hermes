@@ -168,6 +168,15 @@
     target = "dryvist/monitoring-first";
   }
   {
+    # Weekly voice-style learning. Authored in JacobPEvans/jpe-ai-voice and
+    # namespaced under dryvist/ like the marketplace skills. Its Splunk and
+    # GitHub PR credentials arrive only through the cron job's gated env, never
+    # through this skill.
+    input = "jpe-ai-voice";
+    skill = "skills/voice-learn";
+    target = "dryvist/voice-learn";
+  }
+  {
     # Browser Use's official CLI skill. It has no Hermes-specific frontmatter,
     # so it intentionally lives outside dryvist/ and is copied verbatim.
     input = "browser-use";
