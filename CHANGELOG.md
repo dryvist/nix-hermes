@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.23.0...nix-hermes-v0.24.0) (2026-10-24)
+
+
+### Features
+
+* bundle the voice-learn skill ([#219](https://github.com/dryvist/nix-hermes/issues/219)) ([c2fa366](https://github.com/dryvist/nix-hermes/commit/c2fa366040c0b172b7f51d533b850d46982503d5))
+
 ## [0.23.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.22.0...nix-hermes-v0.23.0) (2026-10-23)
 
 
