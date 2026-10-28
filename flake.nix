@@ -1,5 +1,5 @@
 {
-  description = "Shared content bundle (skills + SOUL persona) for the Hermes autonomous agent";
+  description = "Shared content bundle (skills, plugins, and SOUL persona) for the Hermes autonomous agent";
 
   inputs = {
     # Channel branch = intended pin (unstable). Renovate's Nix lock-file
@@ -162,6 +162,11 @@
               for d in ${./data/skills/dryvist}/*/tests; do
                 (cd "$d" && python3 -m unittest discover -s . -p 'test_*.py') || exit 1
               done
+              touch $out
+            '';
+
+            plugin-tests = pkgs.runCommand "plugin-tests" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+              python3 -m unittest discover -s ${./plugins/dryvist-guardrails}/tests -p 'test_*.py'
               touch $out
             '';
 

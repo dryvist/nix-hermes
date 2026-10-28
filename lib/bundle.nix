@@ -1,6 +1,7 @@
 # The agent bundle derivation: everything the Ansible hermes_agent role copies
 # verbatim into $HERMES_HOME. Layout:
 #   result/skills/dryvist/<skill>/...   agent skills (SKILL.md + scripts/tests)
+#   result/plugins/<plugin>/...          Hermes plugins (plugin.yaml + Python)
 #   result/SOUL.md                      shared base + named agent persona
 #   result/limits.json                  fleet context limits
 #   result/soul/profiles/*.md           profile addenda
@@ -72,6 +73,8 @@ pkgs.runCommand "${agent}-bundle" { } ''
 
   mkdir -p $out/skills
   cp -R ${../data/skills}/. $out/skills/
+  mkdir -p $out/plugins
+  cp -R ${../plugins}/. $out/plugins/
   # Copies from the store arrive read-only, which would block writing shared
   # skills into the same tree.
   chmod -R u+w $out/skills

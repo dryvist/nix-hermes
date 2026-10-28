@@ -1,7 +1,8 @@
 # nix-hermes
 
-Shared content bundle (skills + SOUL persona) for the Hermes autonomous agent,
-built with Nix from the same sources the rest of the AI config ecosystem uses.
+Shared content bundle (skills, plugins, and SOUL persona) for the Hermes
+autonomous agent, built with Nix from the same sources the rest of the AI
+config ecosystem uses.
 
 [![CI](https://github.com/dryvist/nix-hermes/actions/workflows/ci.yml/badge.svg)](https://github.com/dryvist/nix-hermes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -20,6 +21,7 @@ into the agent's home:
 ```text
 result/
 ├── skills/dryvist/<skill>/   # SKILL.md + scripts/ + tests/ per skill
+├── plugins/<plugin>/         # plugin.yaml + Python plugin code
 ├── SOUL.md                   # shared autonomous base + Hermes variant
 ├── limits.json               # fleet context defaults
 ├── soul/profiles/            # profile addenda
@@ -28,11 +30,16 @@ result/
     └── on-demand/            # rules read for specific activities
 ```
 
+The `dryvist-guardrails` plugin blocks Home Assistant service calls outside
+`notify` and selected GitHub write commands when
+`DRYVIST_GUARDRAILS_GITHUB_READONLY` is enabled.
+
 ## Usage
 
 - `nix build .#hermes-bundle` — build the bundle locally.
 - `nix flake check` — build + validate every skill's frontmatter and the
-  SOUL.md composition, serving-tokenizer context budgets, and skill tests.
+  SOUL.md composition, serving-tokenizer context budgets, skill tests, and
+  plugin tests.
 
 `SOUL.md` is composed at build time from the shared autonomous base and Hermes
 surface in the immutable `ai-llm-prompts` flake input. The bundle strips OKF
