@@ -15,7 +15,7 @@ _DIRECT_GITHUB_WRITES = (
     re.compile(r"(?<![\w.-])gh\s+(?:pr|issue)\s+(?:create|comment|merge|close|edit|review)\b", re.IGNORECASE),
     re.compile(r"(?<![\w.-])gh\s+release\s+create\b", re.IGNORECASE),
     re.compile(r"(?<![\w.-])gh\s+repo\s+(?:create|delete|edit)\b", re.IGNORECASE),
-    re.compile(r"(?<![\w.-])git\s+push\b", re.IGNORECASE),
+    re.compile(r"(?<![\w.-])git(?:\s+(?:-[Cc]\s*\S+|--\S+))*\s+push\b", re.IGNORECASE),
 )
 _GH_API_CALL = re.compile(r"(?<![\w.-])gh\s+api\b([^;&|\n]*)", re.IGNORECASE)
 _GH_API_WRITE_METHOD = re.compile(

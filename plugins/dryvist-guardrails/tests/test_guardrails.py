@@ -45,13 +45,20 @@ class GuardrailTests(unittest.TestCase):
             "gh api repos/x/y -X POST",
             "gh api repos/x/y -f state=open",
             "git push origin HEAD",
+            "git -C repo push origin HEAD",
+            "git --git-dir=/x/.git push",
         ):
             with self.subTest(command=command):
                 result = self.call_with_flag("1", "terminal", {"command": command})
                 self.assertEqual(result["action"], "block")
 
     def test_allows_reads_and_git_status(self) -> None:
-        for command in ("gh api repos/x/y", "gh api repos/x/y -X GET -f per_page=10", "git status"):
+        for command in (
+            "gh api repos/x/y",
+            "gh api repos/x/y -X GET -f per_page=10",
+            "git status",
+            "git -C repo status",
+        ):
             with self.subTest(command=command):
                 self.assertIsNone(self.call_with_flag("true", "terminal", {"command": command}))
 
