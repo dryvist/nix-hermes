@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.24.0...nix-hermes-v0.25.0) (2026-10-28)
+
+
+### Features
+
+* **plugins:** add dryvist-guardrails pre-tool-call plugin ([#225](https://github.com/dryvist/nix-hermes/issues/225)) ([ee14aaa](https://github.com/dryvist/nix-hermes/commit/ee14aaae314aae32e9a47e0108e754499986b71b))
+
 ## [0.24.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.23.0...nix-hermes-v0.24.0) (2026-10-24)
 
 
