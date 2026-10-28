@@ -1,5 +1,5 @@
 name: dryvist-guardrails
 version: "0.1.0"
 description: "Blocks Home Assistant control outside notifications and selected GitHub writes in read-only profiles."
-hooks:
+provides_hooks:
   - pre_tool_call
