@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 import importlib.util
 import os
 from pathlib import Path
@@ -19,6 +20,27 @@ class GuardrailTests(unittest.TestCase):
     def call_with_flag(self, flag: str, tool_name: str, args: dict[str, str] | None) -> object:
         with patch.dict(os.environ, {guardrails._GITHUB_READONLY_ENV: flag}):
             return guardrails._on_pre_tool_call(tool_name, args)
+
+    def test_pre_tool_call_blocks_without_tools_override_capability(self) -> None:
+        hooks: dict[str, Callable[..., object]] = {}
+
+        class HookContext:
+            def register_hook(self, name: str, callback: Callable[..., object]) -> None:
+                hooks[name] = callback
+
+            def has_capability(self, capability: str) -> bool:
+                raise AssertionError(f"unexpected capability request: {capability}")
+
+        guardrails.register(HookContext())
+        # Hermes v0.22.5 consumes this action/message pair as a block directive.
+        result = hooks["pre_tool_call"](
+            "ha_call_service", {"domain": "light", "service": "turn_on"}
+        )
+
+        self.assertEqual(result, {
+            "action": "block",
+            "message": "Home Assistant control is read-only except notifications.",
+        })
 
     def test_blocks_home_assistant_control(self) -> None:
         result = guardrails._on_pre_tool_call(
