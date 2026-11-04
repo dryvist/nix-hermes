@@ -5,7 +5,7 @@ skill-groups: [core, nix]
 # nix-hermes — AI Agent Documentation
 
 Builds `packages.<system>.hermes-bundle`: the static content tree (skills +
-SOUL.md) the `hermes_agent` Ansible role (ansible-proxmox-apps) copies into
+SOUL.md) the `hermes_agent` Ansible role (ansible-proxmox-ai) copies into
 `$HERMES_HOME` at converge. This repo owns the CONTENT; the role owns all
 deployment machinery (systemd, cron fleet, watchdog, config.yaml, secrets).
 
