@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.26.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.25.0...nix-hermes-v0.26.0) (2026-11-04)
+
+
+### Features
+
+* **agent:** autonomous zcode run j-3db3b8c3c27b03d0 ([#231](https://github.com/dryvist/nix-hermes/issues/231)) ([af91e6e](https://github.com/dryvist/nix-hermes/commit/af91e6e819aa884682b8ae36a3284d3d9d73fefa))
+* **agent:** zcode run j-3db3b8c3c27b03d0 ([af91e6e](https://github.com/dryvist/nix-hermes/commit/af91e6e819aa884682b8ae36a3284d3d9d73fefa))
+
 ## [0.25.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.24.0...nix-hermes-v0.25.0) (2026-10-28)
 
 

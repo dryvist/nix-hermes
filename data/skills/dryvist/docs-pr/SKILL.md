@@ -28,10 +28,9 @@ to end.
 
 ## Hard rules (never violate)
 
-1. **Human review only. Never merge.** Every PR opens ready for review with the
-   `human:review` label. You have no authority to merge, enable auto-merge, or
-   approve. A reviewer merges. The org ruleset also blocks you — do not try to
-   work around it.
+1. **Human review only. Never merge.** You have no authority to merge, enable
+   auto-merge, or approve. A reviewer merges. The org ruleset also blocks you
+   — do not try to work around it.
 2. **Signed commits via the API only.** Commit exclusively through the
    `createCommitOnBranch` GraphQL mutation, which signs server-side under the
    App identity. NEVER `git commit`/`git push` — the org requires signed commits
@@ -42,8 +41,8 @@ to end.
    `docs-private`. Never open a PR against the public docs repo, and
    redact secrets from every string before it leaves the machine.
 4. **No emoji** anywhere in branch names, titles, commit messages, or bodies.
-5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, labels
-   `cloud-routine` and `human:review`, and a `## Provenance` block in the body naming the source(s).
+5. **Attribution triad** on every PR: title suffix ` [routine:hermes]`, the
+   `cloud-routine` label, and a `## Provenance` block in the body naming the source(s).
 6. **Caps + de-dup.** Max 1 open PR per repo per day from this skill. Before
    opening, list existing open PRs and skip if a matching `docs:` PR already
    exists. If over the cap or a duplicate, decline cleanly — do nothing.
@@ -107,12 +106,12 @@ Set `R=dryvist/docs-private`, `B=docs/hermes/<slug>-$(date +%F)`.
    file and a matching entry in `additions` — one commit per PR, so they all go
    in a single mutation. `deletions: [{path: $path}]` removes a file.
 
-4. Open the PR and apply the labels:
+4. Open the PR and apply the label:
 
    ```sh
    gh pr create -R "$R" --base "$BASE" --head "$B" \
      --title "docs: <summary> [routine:hermes]" --body-file body.md \
-     --label cloud-routine --label human:review
+     --label cloud-routine
    ```
 
    `body.md` carries the `## Provenance` block (rule 5). Report the PR URL and
@@ -120,13 +119,13 @@ Set `R=dryvist/docs-private`, `B=docs/hermes/<slug>-$(date +%F)`.
 
 ## Verification
 
-A PR is proof only if it carries the `human:review` label, has no auto-merge
-request, and the head commit's `verification.verified == true`:
+A PR is proof only if it has no auto-merge request and the head commit's
+`verification.verified == true`:
 
 ```sh
-gh pr view <n> -R "$R" --json labels,autoMergeRequest,headRefOid
+gh pr view <n> -R "$R" --json autoMergeRequest,headRefOid
 gh api "repos/$R/commits/<oid>" --jq .commit.verification.verified
 ```
 
-All three must hold. If `verified` is false the commit did not go through the
+Both must hold. If `verified` is false the commit did not go through the
 mutation — the PR is invalid, say so and stop.
