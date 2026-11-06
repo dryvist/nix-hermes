@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.26.0...nix-hermes-v0.27.0) (2026-11-06)
+
+
+### Features
+
+* **bundle:** add pepper-bundle ([#238](https://github.com/dryvist/nix-hermes/issues/238)) ([ddb38be](https://github.com/dryvist/nix-hermes/commit/ddb38be5dd4ced10a3abcfd47c58b0abce9a2297))
+
 ## [0.26.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.25.0...nix-hermes-v0.26.0) (2026-11-04)
 
 
