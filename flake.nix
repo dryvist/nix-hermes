@@ -122,6 +122,7 @@
           # appear in BOTH packages and checks. The checks entry is the
           # load-bearing one; see there for why.
           donnaBundle = mkBundle "donna";
+          pepperBundle = mkBundle "pepper";
 
           contextBudgetChecks = import ./checks/context-budget.nix {
             inherit pkgs;
@@ -140,6 +141,7 @@
           packages = {
             hermes-bundle = bundle;
             donna-bundle = donnaBundle;
+            pepper-bundle = pepperBundle;
             default = bundle;
           };
 
@@ -189,6 +191,7 @@
             # forces its build. Delete that check and Hermes loses this
             # protection too — the coverage is a side effect, not a decision.
             donna-bundle = donnaBundle;
+            pepper-bundle = pepperBundle;
           };
         };
     };
