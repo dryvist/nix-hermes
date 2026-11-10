@@ -1,6 +1,6 @@
 ---
-name: dryvist-docs-starlight-authoring
-description: Write correctly-formed docs-starlight content before handing it to docs-pr for delivery
+name: dryvist-docs-authoring
+description: Write correctly-formed knowledge-base content before handing it to docs-pr for delivery
 version: 1.0.1
 author: dryvist homelab
 license: MIT
@@ -8,11 +8,11 @@ platforms: [linux]
 metadata:
   hermes:
     category: research
-    tags: [documentation, dryvist, docs-starlight]
+    tags: [documentation, dryvist, knowledge-base]
     related_skills: [research/llm-wiki, dryvist/docs-pr]
 ---
 
-# dryvist docs-starlight-authoring
+# dryvist docs-authoring
 
 Content rules for `dryvist/docs-private`, the private Astro Starlight
 knowledge base. Use this to shape a page correctly — frontmatter,
@@ -22,9 +22,8 @@ covers *how it gets committed and opened*. Always defer to `docs-pr` for
 delivery — never `git commit`/`git push` yourself.
 
 Source of truth: this content is kept in sync with the repo-local
-`.claude/skills/docs-starlight-authoring/SKILL.md` in `dryvist/docs-private`
-itself. If the two drift, the repo-local copy wins — it is closer to the
-code it describes.
+copy of this skill in `dryvist/docs-private` itself. If the two drift,
+the repo-local copy wins — it is closer to the code it describes.
 
 ## Do not confuse with the public site
 
