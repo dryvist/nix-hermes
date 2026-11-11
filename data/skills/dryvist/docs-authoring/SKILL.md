@@ -22,7 +22,7 @@ covers *how it gets committed and opened*. Always defer to `docs-pr` for
 delivery — never `git commit`/`git push` yourself.
 
 Source of truth: this content is kept in sync with the repo-local
-copy of this skill in `dryvist/docs-private` itself. If the two drift,
+copy of this skill in the knowledge-base repo itself. If the two drift,
 the repo-local copy wins — it is closer to the code it describes.
 
 ## Do not confuse with the public site
