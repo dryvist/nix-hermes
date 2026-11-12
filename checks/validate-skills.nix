@@ -1,7 +1,14 @@
 # Bundle contract check: every shipped skill carries the frontmatter Hermes'
 # skill loader needs, every allowlisted shared skill actually arrived, and
 # SOUL.md really is base + Hermes variant.
-{ pkgs, bundle }:
+# Pepper-specific skill exclusions are also checked against its bundle output.
+{
+  pkgs,
+  bundle,
+  donnaBundle,
+  pepperBundle,
+  pepperExcludedSkills,
+}:
 
 let
   inherit (pkgs) lib;
@@ -14,6 +21,15 @@ let
     [ -f "${bundle}/skills/${entry.target}/SKILL.md" ] || {
       echo "allowlisted shared skill missing from bundle: ${entry.target}"; fail=1; }
   '') allowlist;
+
+  assertPepperExclusions = lib.concatMapStrings (target: ''
+    [ -e "${bundle}/skills/${target}" ] || {
+      echo "Hermes bundle unexpectedly lacks skill: ${target}"; fail=1; }
+    [ -e "${donnaBundle}/skills/${target}" ] || {
+      echo "Donna bundle unexpectedly lacks skill: ${target}"; fail=1; }
+    [ ! -e "${pepperBundle}/skills/${target}" ] || {
+      echo "excluded skill is present in Pepper bundle: ${target}"; fail=1; }
+  '') pepperExcludedSkills;
 in
 
 pkgs.runCommand "validate-skills" { } ''
@@ -39,6 +55,7 @@ pkgs.runCommand "validate-skills" { } ''
   done
 
   ${assertShared}
+  ${assertPepperExclusions}
 
   [ -f "${bundle}/skills/dryvist/monitoring-first/SKILL.md" ] \
     || { echo "monitoring-first skill is missing from the Hermes bundle"; fail=1; }

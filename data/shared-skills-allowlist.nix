@@ -14,10 +14,11 @@
 # persona names `dryvist/openrouter-models`, so the delivered path must keep
 # that spelling even though the source directory is not namespaced.
 #
-# lib/bundle.nix copies each entry after the local data/skills tree and fails
-# if an entry would land on a path that tree already occupies — adopting a
-# shared skill therefore requires deleting the local copy in the same change,
-# which is the point: the only reason to adopt one is to stop maintaining two.
+# lib/bundle.nix copies each selected entry after the local data/skills tree
+# and fails if an entry would land on a path that tree already occupies —
+# adopting a shared skill therefore requires deleting the local copy in the
+# same change, which is the point: the only reason to adopt one is to stop
+# maintaining two.
 #
 # No frontmatter translation step exists, and none may be added: a skill is
 # delivered byte-for-byte or not at all, because a file patched in transit is a

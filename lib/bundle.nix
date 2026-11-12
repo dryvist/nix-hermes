@@ -30,11 +30,10 @@
   # basename (auto-ai-agent/<agent>.md) and the derivation name prefix, so a
   # bundle can never be named for one agent and filled with another's persona.
   #
-  # Every agent gets the SAME skill set today. That is deliberate rather than
-  # settled: the skills here are homelab operational tooling, and narrowing them
-  # per agent is a change to make when a second agent's job is actually defined,
-  # not one to guess at now.
+  # Bundles use the shared skill set by default. A bundle may exclude skills
+  # that are outside its declared destinations.
   agent ? "hermes",
+  excludeSkills ? [ ],
   limits ? { },
 }:
 
@@ -54,7 +53,9 @@ let
     inherit browser-use claude-code-plugins jpe-ai-voice;
   };
 
-  allowlist = import ../data/shared-skills-allowlist.nix;
+  allowlist = lib.filter (entry: !(builtins.elem entry.target excludeSkills)) (
+    import ../data/shared-skills-allowlist.nix
+  );
 
   copyShared = lib.concatMapStrings (entry: ''
     if [ -e "$out/skills/${entry.target}" ]; then
@@ -80,6 +81,12 @@ pkgs.runCommand "${agent}-bundle" { } ''
   chmod -R u+w $out/skills
 
   ${copyShared}
+
+  # Local skills are copied as a tree; remove only the targets excluded by
+  # this bundle after the shared skills have been copied.
+  ${lib.concatMapStrings (target: ''
+    rm -rf "$out/skills/${target}"
+  '') excludeSkills}
 
   # SOUL.md = provenance comment + the two catalog bodies. Each OKF document
   # begins with YAML frontmatter bounded by `---`; sed removes only that first
