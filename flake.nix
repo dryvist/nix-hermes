@@ -97,13 +97,12 @@
       perSystem =
         { pkgs, ... }:
         let
-          # One derivation per agent, differing only in which catalog surface
-          # is appended to the shared base. The skills are identical, so the
-          # two bundles share every input but that one fragment.
+          # One derivation per agent, differing in catalog surface and any
+          # scope-specific skill exclusions.
           mkBundle =
-            agent:
+            agent: excludeSkills:
             import ./lib/bundle.nix {
-              inherit pkgs agent;
+              inherit pkgs agent excludeSkills;
               inherit (inputs)
                 ai-llm-prompts
                 browser-use
@@ -116,13 +115,20 @@
           # Still named `bundle` because the skills check below consumes it, and
           # what that check validates — skill frontmatter and the Hermes SOUL
           # sentinels — is either identical across bundles or Hermes-specific.
-          bundle = mkBundle "hermes";
+          bundle = mkBundle "hermes" [ ];
 
           # Bound rather than written inline under `packages` because it has to
           # appear in BOTH packages and checks. The checks entry is the
           # load-bearing one; see there for why.
-          donnaBundle = mkBundle "donna";
-          pepperBundle = mkBundle "pepper";
+          donnaBundle = mkBundle "donna" [ ];
+          pepperExcludedSkills = [
+            "dryvist/github-issues"
+            "dryvist/splunk-monitor"
+            "dryvist/docs-pr"
+            "dryvist/zammad-incidents"
+            "dryvist/voice-learn"
+          ];
+          pepperBundle = mkBundle "pepper" pepperExcludedSkills;
 
           contextBudgetChecks = import ./checks/context-budget.nix {
             inherit pkgs;
@@ -152,7 +158,13 @@
               ;
 
             validate-skills = import ./checks/validate-skills.nix {
-              inherit pkgs bundle;
+              inherit
+                pkgs
+                bundle
+                donnaBundle
+                pepperBundle
+                pepperExcludedSkills
+                ;
             };
 
             validate-new-skills = import ./checks/validate-new-skills.nix {
