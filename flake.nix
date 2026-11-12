@@ -121,6 +121,7 @@
           # appear in BOTH packages and checks. The checks entry is the
           # load-bearing one; see there for why.
           donnaBundle = mkBundle "donna" [ ];
+          # Pepper omits five tracker, monitoring, docs, incident, and voice skills Hermes and Donna retain.
           pepperExcludedSkills = [
             "dryvist/github-issues"
             "dryvist/splunk-monitor"
