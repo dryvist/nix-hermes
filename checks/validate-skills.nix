@@ -23,9 +23,9 @@ let
   '') allowlist;
 
   assertPepperExclusions = lib.concatMapStrings (target: ''
-    [ -e "${bundle}/skills/${target}" ] || {
+    [ -d "${bundle}/skills/${target}" ] || {
       echo "Hermes bundle unexpectedly lacks skill: ${target}"; fail=1; }
-    [ -e "${donnaBundle}/skills/${target}" ] || {
+    [ -d "${donnaBundle}/skills/${target}" ] || {
       echo "Donna bundle unexpectedly lacks skill: ${target}"; fail=1; }
     [ ! -e "${pepperBundle}/skills/${target}" ] || {
       echo "excluded skill is present in Pepper bundle: ${target}"; fail=1; }
