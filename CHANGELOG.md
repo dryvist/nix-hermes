@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.27.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.27.0...nix-hermes-v0.27.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* **pepper:** ship only Pepper skills in the Pepper bundle ([#248](https://github.com/dryvist/nix-hermes/issues/248)) ([b62212e](https://github.com/dryvist/nix-hermes/commit/b62212e9f5d6416d84df2eff0521e1a60f22abf6))
+* **pepper:** ship only Pepper's own skills in the Pepper bundle ([b62212e](https://github.com/dryvist/nix-hermes/commit/b62212e9f5d6416d84df2eff0521e1a60f22abf6))
+* **skills:** rename the docs authoring skill to docs-authoring ([dd0472d](https://github.com/dryvist/nix-hermes/commit/dd0472da344683c685dd9b29b10be942d86a2731))
+* **skills:** require kept skills to be directories and list excluded categories ([#249](https://github.com/dryvist/nix-hermes/issues/249)) ([8ae0eb1](https://github.com/dryvist/nix-hermes/commit/8ae0eb1cc5fc90985b9c0b2074403e68f2462b8e))
+
 ## [0.27.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.26.0...nix-hermes-v0.27.0) (2026-11-06)
 
 
