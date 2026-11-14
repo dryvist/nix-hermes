@@ -98,11 +98,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1794586024,
-        "narHash": "sha256-Cep52//DGMcP2TMHo+15gCta5wF3xSLYNzfeCtpved0=",
+        "lastModified": 1794651116,
+        "narHash": "sha256-RTXuyaEFw7Z7+3mvQcZ7jnXfvn5Lpeh07IOUjxUW7/M=",
         "owner": "JacobPEvans",
         "repo": ".github",
-        "rev": "1d116979c83efed708aecdbba0c0174e6e8fb37b",
+        "rev": "63f866fa9d9f03f72eb8a2e0df2b07de3ae8e54d",
         "type": "github"
       },
       "original": {
