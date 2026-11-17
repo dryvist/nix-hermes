@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.27.1...nix-hermes-v0.28.0) (2026-11-17)
+
+
+### Features
+
+* **splunk-monitor:** platform semantics reference for tstats and rest queries ([#256](https://github.com/dryvist/nix-hermes/issues/256)) ([8acdfea](https://github.com/dryvist/nix-hermes/commit/8acdfeaecad233f3c4628b8f863fc6a44c5c9574))
+
 ## [0.27.1](https://github.com/dryvist/nix-hermes/compare/nix-hermes-v0.27.0...nix-hermes-v0.27.1) (2026-11-12)
 
 
