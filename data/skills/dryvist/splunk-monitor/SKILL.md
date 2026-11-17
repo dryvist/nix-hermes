@@ -1,7 +1,7 @@
 ---
 name: dryvist-splunk-monitor
 description: Continuously read the homelab Splunk (SIEM) as a self-directed analyst — hunt for anything anomalous with strictly bounded queries, remember baselines, and alert only when something is genuinely off
-version: 1.0.0
+version: 1.1.0
 author: dryvist homelab
 license: MIT
 platforms: [linux]
@@ -63,6 +63,9 @@ context, you will overflow and die. So **every** search you run MUST be bounded:
 
 7. **Keep each run small.** Use a handful of tight queries. Record deep threads
    (Section 2.5) for a later run.
+
+8. **Platform quirks.** Before a `tstats` or `| rest` query, read
+   `references/platform-semantics.md` (`skill_view` with that `file_path`).
 
 If you ever feel the urge to "just look at the raw logs to see what's there,"
 `| head 20` it. There is no exception to the rails.
